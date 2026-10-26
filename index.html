@@ -123,6 +123,102 @@
   .chip.male.active   { background: #6366f1; border-color: #6366f1; }
   .chip.female.active { background: #ec4899; border-color: #ec4899; }
 
+  /* filter dropdowns row */
+  .filter-row-2 {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .filter-row-2::-webkit-scrollbar { display: none; }
+  .f-select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .f-ico {
+    position: absolute;
+    left: 8px;
+    font-size: 11px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .f-select-wrap select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 5px 24px 5px 24px;
+    font-size: 12px;
+    color: #475569;
+    font-weight: 500;
+    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%2394a3b8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    transition: all 0.15s;
+    max-width: 180px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .f-select-wrap select:hover {
+    border-color: #f97316;
+  }
+  .f-select-wrap select.has-val {
+    background-color: #fff7ed;
+    border-color: #f97316;
+    color: #c2410c;
+    font-weight: 600;
+  }
+  .reset-filters-btn {
+    display: none;
+    align-items: center;
+    gap: 3px;
+    padding: 5px 11px;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: 18px;
+    color: #b91c1c;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+    transition: all 0.15s;
+  }
+  .reset-filters-btn:hover { background: #fecaca; }
+  .reset-filters-btn.show { display: inline-flex; }
+
+  /* active filter badge chips in results bar */
+  .active-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 6px;
+  }
+  .act-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #c2410c;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .act-tag:hover { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+
   /* ── Main ────────────────────────────────────────────────────────────── */
   main { max-width: 720px; margin: 0 auto; padding: 16px 14px 100px; }
 
@@ -449,26 +545,67 @@
   </div>
 </header>
 
-<!-- ── STICKY SEARCH ───────────────────────────────────────────────────────── -->
+<!-- ── STICKY SEARCH & FILTERS ─────────────────────────────────────────────── -->
 <div class="sticky-bar">
   <div class="search-wrap">
     <svg class="search-ico" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="search" id="q" placeholder="खोजें: Ramesh, रमेश, Santosh, EPIC नंबर..." autocomplete="off" autocorrect="off" spellcheck="false" />
     <button class="clr" id="clrBtn">✕</button>
   </div>
+
+  <!-- Row 1: Fast Chips -->
   <div class="chips" id="chips">
     <button class="chip active" data-f="all">सभी</button>
     <button class="chip male"   data-f="M">👨 पुरुष</button>
     <button class="chip female" data-f="F">👩 महिला</button>
     <button class="chip" data-f="active">✅ Active</button>
     <button class="chip" data-f="deleted">🚫 Deleted</button>
+    <button class="chip" data-f="supp">⚡ परिशिष्ट (New)</button>
+    <button class="chip" data-f="youth">🎓 युवा (18-25)</button>
+    <button class="chip" data-f="senior">🧓 60+ वरिष्ठ</button>
+  </div>
+
+  <!-- Row 2: Location & Attribute Dropdowns -->
+  <div class="filter-row-2">
+    <div class="f-select-wrap">
+      <span class="f-ico">📍</span>
+      <select id="locFilter" title="मोहल्ला / Locality">
+        <option value="">सभी मोहल्ले (All)</option>
+      </select>
+    </div>
+    <div class="f-select-wrap">
+      <span class="f-ico">🏛️</span>
+      <select id="wardFilter" title="वार्ड / Ward">
+        <option value="">सभी वार्ड (All)</option>
+      </select>
+    </div>
+    <div class="f-select-wrap">
+      <span class="f-ico">🎂</span>
+      <select id="ageFilter" title="आयु वर्ग / Age">
+        <option value="">सभी आयु (All)</option>
+        <option value="18-25">18–25 वर्ष</option>
+        <option value="26-40">26–40 वर्ष</option>
+        <option value="41-60">41–60 वर्ष</option>
+        <option value="60+">60+ वर्ष</option>
+      </select>
+    </div>
+    <div class="f-select-wrap">
+      <span class="f-ico">👥</span>
+      <select id="relFilter" title="संबंध / Relation">
+        <option value="">सभी संबंध (All)</option>
+        <option value="father">पिता (Father)</option>
+        <option value="husband">पति (Husband)</option>
+      </select>
+    </div>
+    <button class="reset-filters-btn" id="resetFiltersBtn" title="सभी फ़िल्टर रीसेट करें">✕ रीसेट</button>
   </div>
 </div>
 
 <!-- ── MAIN ───────────────────────────────────────────────────────────────── -->
 <main>
-  <div class="rbar">
+  <div class="rbar" id="rbar">
     <div class="rcount" id="rcount"></div>
+    <div class="active-tags" id="activeTags"></div>
   </div>
   <div id="content">
     <div class="state">
@@ -496,7 +633,11 @@ const PAGE_SIZE = 40;
 let WARDS = [];          // raw [{ward, list:[...]}]
 let ALL   = [];          // flat array with ward injected
 let query = '';
-let gf    = 'all';       // gender/status filter
+let gf    = 'all';       // chip filter ('all', 'M', 'F', 'active', 'deleted', 'supp', 'youth', 'senior')
+let filterLoc  = '';     // selected locality
+let filterWard = '';     // selected ward
+let filterAge  = '';     // selected age group ('18-25', '26-40', '41-60', '60+')
+let filterRel  = '';     // selected relation ('father', 'husband')
 
 /* ━━━ Helpers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -519,13 +660,39 @@ function matchVoter(v, q) {
          norm(v.house_no).includes(q);
 }
 
-function filterStatus(v) {
-  if (gf === 'all')     return true;
-  if (gf === 'M')       return v.gender === 'M';
-  if (gf === 'F')       return v.gender === 'F';
-  if (gf === 'active')  return v.status === 'active';
-  if (gf === 'deleted') return v.status === 'deleted';
+function applyFilters(v) {
+  // Chip filter
+  if (gf === 'M' && v.gender !== 'M') return false;
+  if (gf === 'F' && v.gender !== 'F') return false;
+  if (gf === 'active' && v.status !== 'active') return false;
+  if (gf === 'deleted' && v.status !== 'deleted') return false;
+  if (gf === 'supp' && v.source !== 'supplementary') return false;
+  if (gf === 'youth' && (v.age < 18 || v.age > 25)) return false;
+  if (gf === 'senior' && (v.age < 60)) return false;
+
+  // Dropdown: Locality
+  if (filterLoc && (v.locality_hi || '').trim() !== filterLoc) return false;
+
+  // Dropdown: Ward
+  if (filterWard && String(v.ward) !== String(filterWard)) return false;
+
+  // Dropdown: Age
+  if (filterAge) {
+    const a = Number(v.age) || 0;
+    if (filterAge === '18-25' && (a < 18 || a > 25)) return false;
+    if (filterAge === '26-40' && (a < 26 || a > 40)) return false;
+    if (filterAge === '41-60' && (a < 41 || a > 60)) return false;
+    if (filterAge === '60+' && (a < 60)) return false;
+  }
+
+  // Dropdown: Relation
+  if (filterRel && v.relation_type !== filterRel) return false;
+
   return true;
+}
+
+function hasActiveFilters() {
+  return !!(query || gf !== 'all' || filterLoc || filterWard || filterAge || filterRel);
 }
 
 /* ━━━ Boot ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -568,6 +735,7 @@ async function boot() {
     }
 
     buildStats();
+    populateFilterOptions();
     render();
   } catch(e) {
     document.getElementById('content').innerHTML = `<div class="state">
@@ -576,6 +744,123 @@ async function boot() {
       <p><code>${DATA_FILE}</code> इसी फोल्डर में रखें।<br/>${e.message}</p>
     </div>`;
   }
+}
+
+/* ━━━ Populate Filter Dropdowns ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function populateFilterOptions() {
+  // Localities: count occurrences across ALL
+  const locCounts = {};
+  ALL.forEach(v => {
+    const loc = (v.locality_hi || '').trim();
+    if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
+  });
+
+  const locSelect = document.getElementById('locFilter');
+  const sortedLocs = Object.keys(locCounts).sort((a,b) => locCounts[b] - locCounts[a]);
+  let locHtml = '<option value="">📍 सभी मोहल्ले (All)</option>';
+  sortedLocs.forEach(loc => {
+    locHtml += `<option value="${esc(loc)}">${esc(loc)} (${locCounts[loc]})</option>`;
+  });
+  locSelect.innerHTML = locHtml;
+
+  // Wards
+  const wardSelect = document.getElementById('wardFilter');
+  const wardSet = [...new Set(ALL.map(v => v.ward).filter(Boolean))].sort((a,b)=>+a-+b);
+  let wardHtml = '<option value="">🏛️ सभी वार्ड (All)</option>';
+  wardSet.forEach(w => {
+    const cnt = ALL.filter(v => v.ward === w).length;
+    wardHtml += `<option value="${w}">वार्ड ${w} (${cnt})</option>`;
+  });
+  wardSelect.innerHTML = wardHtml;
+}
+
+/* ━━━ Active Filter Badges ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function renderActiveTags() {
+  const tagsWrap = document.getElementById('activeTags');
+  if (!tagsWrap) return;
+
+  const chipsLabels = {
+    M: '👨 पुरुष', F: '👩 महिला', active: '✅ Active',
+    deleted: '🚫 Deleted', supp: '⚡ परिशिष्ट', youth: '🎓 18-25 युवा', senior: '🧓 60+ वरिष्ठ'
+  };
+
+  let html = '';
+  if (gf !== 'all' && chipsLabels[gf]) {
+    html += `<span class="act-tag" onclick="setChip('all')">${chipsLabels[gf]} ✕</span>`;
+  }
+  if (filterLoc) {
+    html += `<span class="act-tag" onclick="clearFilter('loc')">📍 ${esc(filterLoc)} ✕</span>`;
+  }
+  if (filterWard) {
+    html += `<span class="act-tag" onclick="clearFilter('ward')">🏛️ वार्ड ${filterWard} ✕</span>`;
+  }
+  if (filterAge) {
+    const ageLabels = { '18-25':'18–25 वर्ष', '26-40':'26–40 वर्ष', '41-60':'41–60 वर्ष', '60+':'60+ वर्ष' };
+    html += `<span class="act-tag" onclick="clearFilter('age')">🎂 ${ageLabels[filterAge]||filterAge} ✕</span>`;
+  }
+  if (filterRel) {
+    const relLabels = { father:'पिता (Father)', husband:'पति (Husband)' };
+    html += `<span class="act-tag" onclick="clearFilter('rel')">👥 ${relLabels[filterRel]||filterRel} ✕</span>`;
+  }
+  tagsWrap.innerHTML = html;
+
+  const resetBtn = document.getElementById('resetFiltersBtn');
+  if (resetBtn) resetBtn.classList.toggle('show', hasActiveFilters());
+}
+
+function clearFilter(type) {
+  if (type === 'loc') {
+    filterLoc = '';
+    const el = document.getElementById('locFilter');
+    el.value = ''; el.classList.remove('has-val');
+  } else if (type === 'ward') {
+    filterWard = '';
+    const el = document.getElementById('wardFilter');
+    el.value = ''; el.classList.remove('has-val');
+  } else if (type === 'age') {
+    filterAge = '';
+    const el = document.getElementById('ageFilter');
+    el.value = ''; el.classList.remove('has-val');
+  } else if (type === 'rel') {
+    filterRel = '';
+    const el = document.getElementById('relFilter');
+    el.value = ''; el.classList.remove('has-val');
+  }
+  render();
+}
+
+function setChip(val) {
+  gf = val;
+  document.querySelectorAll('#chips .chip').forEach(b => {
+    b.classList.toggle('active', b.dataset.f === val);
+  });
+  render();
+}
+
+function resetAllFilters() {
+  query = '';
+  document.getElementById('q').value = '';
+  document.getElementById('clrBtn').classList.remove('on');
+
+  setChip('all');
+
+  filterLoc = '';
+  const lf = document.getElementById('locFilter');
+  lf.value = ''; lf.classList.remove('has-val');
+
+  filterWard = '';
+  const wf = document.getElementById('wardFilter');
+  wf.value = ''; wf.classList.remove('has-val');
+
+  filterAge = '';
+  const af = document.getElementById('ageFilter');
+  af.value = ''; af.classList.remove('has-val');
+
+  filterRel = '';
+  const rf = document.getElementById('relFilter');
+  rf.value = ''; rf.classList.remove('has-val');
+
+  render();
 }
 
 /* ━━━ Stats ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -598,23 +883,24 @@ function render() {
   const content = document.getElementById('content');
   const rcount  = document.getElementById('rcount');
 
-  if (q || gf !== 'all') {
-    // ── Search mode: flat list ──────────────────────────────────────────
-    const hits = ALL.filter(v => matchVoter(v, q) && filterStatus(v));
-    rcount.innerHTML = q
-      ? `<b>${hits.length.toLocaleString()}</b> परिणाम मिले`
-      : `<b>${hits.length.toLocaleString()}</b> मतदाता`;
+  renderActiveTags();
+
+  if (hasActiveFilters()) {
+    // ── Filtered mode: flat / ward-grouped ──────────────────────────────
+    const hits = ALL.filter(v => matchVoter(v, q) && applyFilters(v));
+    rcount.innerHTML = `<b>${hits.length.toLocaleString()}</b> परिणाम मिले`;
 
     if (hits.length === 0) {
       content.innerHTML = `<div class="state">
         <span class="state-emoji">🔍</span>
         <h3>कोई परिणाम नहीं</h3>
-        <p>"${esc(query)}" से कोई मतदाता नहीं मिला।<br/>हिंदी या English में दोनों तरफ से खोजें।</p>
+        <p>चुने गए फ़िल्टर से कोई मतदाता नहीं मिला।</p>
+        <button class="more-btn" style="margin-top:12px;padding:8px 18px;display:inline-block" onclick="resetAllFilters()">फ़िल्टर रीसेट करें</button>
       </div>`;
       return;
     }
 
-    // Group search results by ward for clarity
+    // Group filtered results by ward for clarity
     const byWard = {};
     hits.forEach(v => { (byWard[v.ward] ??= []).push(v); });
 
@@ -640,13 +926,13 @@ function render() {
     bindCards();
 
   } else {
-    // ── Ward-first mode ─────────────────────────────────────────────────
-    const total = ALL.filter(filterStatus).length;
+    // ── Default Ward-first mode ─────────────────────────────────────────
+    const total = ALL.length;
     rcount.innerHTML = `<b>${total.toLocaleString()}</b> मतदाता — <b>${WARDS.length}</b> वार्ड`;
 
     let html = '';
     WARDS.forEach((w, wi) => {
-      const voters = w.list.filter(filterStatus);
+      const voters = w.list;
       if (!voters.length) return;
 
       const isOpen = true; // all open by default
@@ -756,13 +1042,13 @@ function loadMore(ward) {
   const w = WARDS.find(x => x.ward === ward);
   if (!w) return;
   const shown = body.querySelectorAll('.vcard').length;
-  const voters = w.list.filter(filterStatus);
+  const voters = hasActiveFilters() ? w.list.filter(applyFilters) : w.list;
   const next   = voters.slice(shown, shown + PAGE_SIZE);
   const rest   = voters.length - shown - next.length;
 
   const moreWrap = body.querySelector('.more-wrap');
   let frag = '';
-  next.forEach(v => { frag += voterCardHTML(v, ''); });
+  next.forEach(v => { frag += voterCardHTML(v, norm(query)); });
   if (moreWrap) moreWrap.insertAdjacentHTML('beforebegin', frag);
 
   if (rest > 0) {
@@ -776,7 +1062,7 @@ function loadMore(ward) {
     card.addEventListener('click', () => {
       const id = +card.dataset.id;
       const v = ALL.find(x => x._id === id);
-      if (v) openDetail(v, '');
+      if (v) openDetail(v, norm(query));
     });
   });
 }
@@ -898,6 +1184,32 @@ document.getElementById('chips').addEventListener('click', e => {
   gf = btn.dataset.f;
   render();
 });
+
+document.getElementById('locFilter').addEventListener('change', e => {
+  filterLoc = e.target.value;
+  e.target.classList.toggle('has-val', !!filterLoc);
+  render();
+});
+
+document.getElementById('wardFilter').addEventListener('change', e => {
+  filterWard = e.target.value;
+  e.target.classList.toggle('has-val', !!filterWard);
+  render();
+});
+
+document.getElementById('ageFilter').addEventListener('change', e => {
+  filterAge = e.target.value;
+  e.target.classList.toggle('has-val', !!filterAge);
+  render();
+});
+
+document.getElementById('relFilter').addEventListener('change', e => {
+  filterRel = e.target.value;
+  e.target.classList.toggle('has-val', !!filterRel);
+  render();
+});
+
+document.getElementById('resetFiltersBtn').addEventListener('click', resetAllFilters);
 
 document.getElementById('overlay').addEventListener('click', e => {
   if (e.target === document.getElementById('overlay')) closeDetail();
