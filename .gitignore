@@ -1,0 +1,7 @@
+# Ignore all PDF files
+*.pdf
+
+# OS & Python
+.DS_Store
+__pycache__/
+*.pyc

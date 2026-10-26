@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>मतदाता सूची — Voter List Masalpur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+  /* ── Reset ──────────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .hi { font-family: 'Noto Sans Devanagari', sans-serif; }
+
+  /* ── Header ──────────────────────────────────────────────────────────── */
+  header {
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 18px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .brand-logo {
+    width: 46px; height: 46px; flex-shrink: 0;
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 3px 10px rgba(249,115,22,0.3);
+  }
+  .brand-title {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 19px; font-weight: 700; color: #0f172a;
+    line-height: 1.2;
+  }
+  .brand-sub { font-size: 11px; color: #94a3b8; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 2px; }
+
+  /* stats */
+  .stats-row {
+    display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+    padding-bottom: 14px;
+  }
+  .stats-row::-webkit-scrollbar { display: none; }
+  .stat {
+    display: flex; align-items: center; gap: 5px;
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 20px; padding: 5px 11px;
+    white-space: nowrap; font-size: 12px; color: #64748b;
+    flex-shrink: 0;
+  }
+  .stat strong { color: #0f172a; font-weight: 600; }
+  .sdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+  /* ── Search sticky ───────────────────────────────────────────────────── */
+  .sticky-bar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 11px 16px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .search-wrap { position: relative; margin-bottom: 10px; }
+  .search-ico {
+    position: absolute; left: 13px; top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8; font-size: 16px; pointer-events: none;
+  }
+  #q {
+    width: 100%;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 40px 12px 40px;
+    font-size: 16px; color: #0f172a;
+    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    caret-color: #f97316;
+  }
+  #q::placeholder { color: #cbd5e1; }
+  #q:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+    background: #fff;
+  }
+  .clr {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    width: 26px; height: 26px; background: #e2e8f0; border: none;
+    border-radius: 50%; color: #64748b; font-size: 12px;
+    cursor: pointer; display: none; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .clr:hover { background: #f97316; color: #fff; }
+  .clr.on { display: flex; }
+
+  /* filter chips */
+  .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    padding: 5px 13px; border-radius: 20px;
+    border: 1.5px solid #e2e8f0; background: #fff;
+    color: #64748b; font-size: 12px; font-weight: 500;
+    cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+    transition: all 0.15s;
+  }
+  .chip:hover { border-color: #f97316; color: #f97316; }
+  .chip.active { background: #f97316; border-color: #f97316; color: #fff; font-weight: 600; }
+  .chip.male.active   { background: #6366f1; border-color: #6366f1; }
+  .chip.female.active { background: #ec4899; border-color: #ec4899; }
+
+  /* ── Main ────────────────────────────────────────────────────────────── */
+  main { max-width: 720px; margin: 0 auto; padding: 16px 14px 100px; }
+
+  /* results bar */
+  .rbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; min-height: 22px;
+  }
+  .rcount { font-size: 12px; color: #64748b; }
+  .rcount b { color: #f97316; font-size: 13px; }
+
+  /* ── Ward section ────────────────────────────────────────────────────── */
+  .ward-section { margin-bottom: 14px; }
+
+  .ward-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px 14px 0 0;
+    padding: 13px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .ward-header:hover { background: #fef9f5; }
+  .ward-header.collapsed { border-radius: 14px; }
+
+  .wh-left { display: flex; align-items: center; gap: 10px; }
+
+  .ward-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 38px; height: 38px; padding: 0 10px;
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    border-radius: 10px; color: #fff;
+    font-weight: 800; font-size: 15px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(249,115,22,0.3);
+  }
+
+  .ward-info { line-height: 1.3; }
+  .ward-label {
+    font-weight: 700; font-size: 14px; color: #0f172a;
+  }
+  .ward-count { font-size: 12px; color: #64748b; margin-top: 1px; }
+
+  .wh-right { display: flex; align-items: center; gap: 8px; }
+  .ward-arrow {
+    width: 28px; height: 28px; background: #f1f5f9;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #94a3b8; font-size: 13px; flex-shrink: 0;
+    transition: transform 0.25s, background 0.15s;
+  }
+  .ward-header:not(.collapsed) .ward-arrow { transform: rotate(180deg); background: #fff4ed; color: #f97316; }
+
+  .ward-body {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    overflow: hidden;
+  }
+  .ward-body.hidden { display: none; }
+
+  /* ── Voter card ──────────────────────────────────────────────────────── */
+  .vcard {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 13px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .vcard:last-child { border-bottom: none; }
+  .vcard:hover { background: #fef9f5; }
+  .vcard:active { background: #fff4ed; }
+
+  /* status strip on left */
+  .vcard::before {
+    content: ''; position: absolute;
+    left: 0; top: 8px; bottom: 8px; width: 3px;
+    border-radius: 0 3px 3px 0;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .vcard:hover::before { opacity: 1; background: #f97316; }
+  .vcard.status-deleted { opacity: 0.6; }
+  .vcard.status-modified::before { opacity: 1; background: #f59e0b; }
+
+  .vc-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 10px;
+    margin-bottom: 5px;
+  }
+
+  .vc-names { flex: 1; min-width: 0; }
+  .vc-name-hi {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 16px; font-weight: 700; color: #0f172a;
+    line-height: 1.3;
+  }
+  .vc-name-hi.deleted { text-decoration: line-through; color: #94a3b8; }
+  .vc-name-en { font-size: 12px; color: #94a3b8; margin-top: 2px; text-transform: capitalize; }
+
+  .vc-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+
+  .gpill {
+    padding: 3px 9px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+  }
+  .gpill-M { background: #eff6ff; color: #6366f1; border: 1px solid #c7d2fe; }
+  .gpill-F { background: #fdf2f8; color: #ec4899; border: 1px solid #fbcfe8; }
+
+  .status-pill {
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 2px 7px; border-radius: 4px;
+  }
+  .sp-active   { background: #dcfce7; color: #16a34a; }
+  .sp-deleted  { background: #fee2e2; color: #dc2626; }
+  .sp-modified { background: #fef9c3; color: #ca8a04; }
+
+  /* meta row */
+  .vc-meta {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
+  }
+  .vmeta { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #64748b; }
+  .vmeta svg { flex-shrink: 0; opacity: 0.7; }
+
+  /* relation */
+  .vc-rel {
+    display: flex; align-items: center; gap: 6px;
+    border-top: 1px solid #f1f5f9; padding-top: 7px;
+  }
+  .rel-lbl {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 2px 7px; border-radius: 4px;
+    background: #f1f5f9; color: #94a3b8; flex-shrink: 0;
+  }
+  .rel-nm {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 14px; color: #334155; font-weight: 500;
+  }
+
+  mark {
+    background: rgba(249,115,22,0.15);
+    color: #c2410c;
+    border-radius: 3px; padding: 0 2px;
+  }
+
+  /* locality tag */
+  .loc-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 11px; color: #64748b;
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 4px; padding: 2px 7px;
+  }
+
+  /* ── Empty / Loading ─────────────────────────────────────────────────── */
+  .state {
+    text-align: center; padding: 60px 24px;
+    background: #fff; border-radius: 14px;
+    border: 1px solid #e2e8f0;
+  }
+  .state-emoji { font-size: 48px; margin-bottom: 14px; display: block; }
+  .state h3 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 18px; color: #0f172a; margin-bottom: 8px;
+  }
+  .state p { font-size: 13px; color: #64748b; line-height: 1.7; }
+  .state code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; color: #f97316; font-size: 12px; }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid #e2e8f0; border-top-color: #f97316;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* load more */
+  .more-wrap { text-align: center; padding: 12px 0 4px; }
+  .more-btn {
+    padding: 9px 22px; background: #f8fafc;
+    border: 1.5px solid #e2e8f0; color: #64748b;
+    border-radius: 10px; font-size: 13px; cursor: pointer;
+    transition: all 0.15s; display: none;
+  }
+  .more-btn:hover { border-color: #f97316; color: #f97316; background: #fff; }
+
+  /* ── Bottom sheet modal ──────────────────────────────────────────────── */
+  .overlay {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(15,23,42,0.5);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  .overlay.open { display: flex; animation: fadein 0.2s ease; }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+  .sheet {
+    background: #fff;
+    border-radius: 22px 22px 0 0;
+    width: 100%; max-width: 720px;
+    max-height: 92vh; overflow-y: auto;
+    animation: slideup 0.28s cubic-bezier(.34,1.56,.64,1);
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+  }
+  @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  .sh-handle {
+    width: 38px; height: 4px; background: #e2e8f0;
+    border-radius: 4px; margin: 12px auto 0;
+  }
+  .sh-body { padding: 20px 20px 28px; }
+
+  .sh-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; margin-bottom: 16px;
+  }
+  .sh-name-hi {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 24px; font-weight: 800; color: #0f172a; line-height: 1.2;
+  }
+  .sh-name-en { font-size: 13px; color: #94a3b8; margin-top: 4px; text-transform: capitalize; }
+  .sh-close {
+    width: 34px; height: 34px; background: #f1f5f9;
+    border: none; border-radius: 50%; cursor: pointer;
+    font-size: 17px; color: #64748b; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; margin-left: 10px;
+  }
+  .sh-close:hover { background: #fee2e2; color: #dc2626; }
+
+  /* EPIC chip */
+  .epic-row {
+    display: flex; align-items: center; gap: 8px;
+    background: #f0f9ff; border: 1px solid #bae6fd;
+    border-radius: 10px; padding: 10px 14px;
+    margin-bottom: 16px; cursor: pointer; transition: all 0.15s;
+  }
+  .epic-row:hover { background: #e0f2fe; }
+  .epic-row.copied { background: #f0fdf4; border-color: #86efac; }
+  .epic-id {
+    font-family: 'Inter', monospace; font-size: 13px;
+    font-weight: 700; color: #0284c7; letter-spacing: 0.4px;
+    flex: 1; word-break: break-all;
+  }
+  .epic-row.copied .epic-id { color: #16a34a; }
+  .epic-copy { font-size: 12px; color: #94a3b8; flex-shrink: 0; }
+
+  /* detail grid */
+  .dgrid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;
+  }
+  .ditem {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .dlabel {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 4px;
+  }
+  .dval {
+    font-size: 18px; font-weight: 700; color: #0f172a;
+  }
+  .dval-hi { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 16px; }
+  .dval.blue { color: #6366f1; }
+  .dval.pink { color: #ec4899; }
+  .dval.green { color: #16a34a; }
+
+  /* relation card */
+  .rel-card {
+    background: #fff7ed; border: 1px solid #fed7aa;
+    border-radius: 10px; padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 10px;
+  }
+  .rel-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: #fff; border: 1px solid #fed7aa;
+    border-radius: 50%; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rel-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #f97316; margin-bottom: 3px; }
+  .rel-name-hi {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 18px; font-weight: 700; color: #0f172a;
+  }
+
+  /* locality in sheet */
+  .loc-row {
+    display: flex; align-items: center; gap: 8px;
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 10px; padding: 11px 14px;
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 14px; color: #334155; font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  /* ── Search result mode ──────────────────────────────────────────────── */
+  .search-results { }
+  .sr-group-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #94a3b8;
+    padding: 8px 4px 6px; margin-top: 4px;
+  }
+
+  @media (min-width: 500px) {
+    .sheet { border-radius: 20px; margin: 16px; width: calc(100% - 32px); max-width: 688px; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────────────────────────────────────────────── -->
+<header>
+  <div class="brand">
+    <div class="brand-logo">🗳️</div>
+    <div>
+      <div class="brand-title">मतदाता सूची</div>
+      <div class="brand-sub">Masalpur · Karauli · Rajasthan · 2026</div>
+    </div>
+  </div>
+  <div class="stats-row" id="statsRow">
+    <div class="stat"><div class="spinner" style="width:14px;height:14px;border-width:2px;margin:0"></div> &nbsp;लोड हो रहा है...</div>
+  </div>
+</header>
+
+<!-- ── STICKY SEARCH ───────────────────────────────────────────────────────── -->
+<div class="sticky-bar">
+  <div class="search-wrap">
+    <svg class="search-ico" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="search" id="q" placeholder="खोजें: Ramesh, रमेश, Santosh, EPIC नंबर..." autocomplete="off" autocorrect="off" spellcheck="false" />
+    <button class="clr" id="clrBtn">✕</button>
+  </div>
+  <div class="chips" id="chips">
+    <button class="chip active" data-f="all">सभी</button>
+    <button class="chip male"   data-f="M">👨 पुरुष</button>
+    <button class="chip female" data-f="F">👩 महिला</button>
+    <button class="chip" data-f="active">✅ Active</button>
+    <button class="chip" data-f="deleted">🚫 Deleted</button>
+  </div>
+</div>
+
+<!-- ── MAIN ───────────────────────────────────────────────────────────────── -->
+<main>
+  <div class="rbar">
+    <div class="rcount" id="rcount"></div>
+  </div>
+  <div id="content">
+    <div class="state">
+      <div class="spinner"></div>
+      <h3>डेटा लोड हो रहा है...</h3>
+      <p>कृपया प्रतीक्षा करें</p>
+    </div>
+  </div>
+</main>
+
+<!-- ── DETAIL SHEET ───────────────────────────────────────────────────────── -->
+<div class="overlay" id="overlay">
+  <div class="sheet" id="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<script>
+/* ━━━ Config ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+const DATA_FILE = './voters.json';
+const PAGE_SIZE = 40;
+
+/* ━━━ State ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+let WARDS = [];          // raw [{ward, list:[...]}]
+let ALL   = [];          // flat array with ward injected
+let query = '';
+let gf    = 'all';       // gender/status filter
+
+/* ━━━ Helpers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const norm = s => (s||'').toLowerCase().trim();
+
+function hl(text, q) {
+  if (!q || !text) return esc(text||'');
+  const safe = esc(text);
+  const pat  = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return safe.replace(new RegExp(`(${pat})`, 'gi'), '<mark>$1</mark>');
+}
+
+function matchVoter(v, q) {
+  if (!q) return true;
+  return norm(v.name_hi).includes(q)        ||
+         norm(v.name_en).includes(q)         ||
+         norm(v.relation_name_hi).includes(q) ||
+         norm(v.locality_hi).includes(q)      ||
+         norm(v.epic).includes(q)             ||
+         norm(v.house_no).includes(q);
+}
+
+function filterStatus(v) {
+  if (gf === 'all')     return true;
+  if (gf === 'M')       return v.gender === 'M';
+  if (gf === 'F')       return v.gender === 'F';
+  if (gf === 'active')  return v.status === 'active';
+  if (gf === 'deleted') return v.status === 'deleted';
+  return true;
+}
+
+/* ━━━ Boot ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+async function boot() {
+  try {
+    const r = await fetch(DATA_FILE);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+
+    // Support [{ward,list}] or flat array or {voters:[]}
+    if (Array.isArray(data) && data[0]?.list) {
+      WARDS = data;
+      ALL   = data.flatMap(w => w.list.map(v => ({ ...v, ward: w.ward })));
+    } else if (Array.isArray(data)) {
+      // flat array — group by ward field
+      const map = {};
+      data.forEach(v => { (map[v.ward||0] ??= []).push(v); });
+      WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
+      ALL = data;
+    } else {
+      const arr = data.voters || data.data || [];
+      const map = {};
+      arr.forEach(v => { (map[v.ward||0] ??= []).push(v); });
+      WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
+      ALL = arr;
+    }
+
+    buildStats();
+    render();
+  } catch(e) {
+    document.getElementById('content').innerHTML = `<div class="state">
+      <span class="state-emoji">⚠️</span>
+      <h3>फाइल नहीं मिली</h3>
+      <p><code>${DATA_FILE}</code> इसी फोल्डर में रखें।<br/>${e.message}</p>
+    </div>`;
+  }
+}
+
+/* ━━━ Stats ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function buildStats() {
+  const m = ALL.filter(v=>v.gender==='M').length;
+  const f = ALL.filter(v=>v.gender==='F').length;
+  const d = ALL.filter(v=>v.status==='deleted').length;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat"><span class="sdot" style="background:#f97316"></span> कुल <strong>${ALL.length.toLocaleString()}</strong></div>
+    <div class="stat"><span class="sdot" style="background:#6366f1"></span> पुरुष <strong>${m}</strong></div>
+    <div class="stat"><span class="sdot" style="background:#ec4899"></span> महिला <strong>${f}</strong></div>
+    <div class="stat"><span class="sdot" style="background:#16a34a"></span> वार्ड <strong>${WARDS.length}</strong></div>
+    <div class="stat"><span class="sdot" style="background:#dc2626"></span> Deleted <strong>${d}</strong></div>
+  `;
+}
+
+/* ━━━ Main render ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function render() {
+  const q = norm(query);
+  const content = document.getElementById('content');
+  const rcount  = document.getElementById('rcount');
+
+  if (q || gf !== 'all') {
+    // ── Search mode: flat list ──────────────────────────────────────────
+    const hits = ALL.filter(v => matchVoter(v, q) && filterStatus(v));
+    rcount.innerHTML = q
+      ? `<b>${hits.length.toLocaleString()}</b> परिणाम मिले`
+      : `<b>${hits.length.toLocaleString()}</b> मतदाता`;
+
+    if (hits.length === 0) {
+      content.innerHTML = `<div class="state">
+        <span class="state-emoji">🔍</span>
+        <h3>कोई परिणाम नहीं</h3>
+        <p>"${esc(query)}" से कोई मतदाता नहीं मिला।<br/>हिंदी या English में दोनों तरफ से खोजें।</p>
+      </div>`;
+      return;
+    }
+
+    // Group search results by ward for clarity
+    const byWard = {};
+    hits.forEach(v => { (byWard[v.ward] ??= []).push(v); });
+
+    let html = '<div class="search-results">';
+    Object.keys(byWard).sort((a,b)=>+a-+b).forEach(ward => {
+      const wVoters = byWard[ward];
+      html += `<div class="ward-section">`;
+      html += `<div class="ward-header" style="cursor:default; border-radius:14px 14px 0 0;">
+        <div class="wh-left">
+          <div class="ward-badge">${ward}</div>
+          <div class="ward-info">
+            <div class="ward-label">वार्ड ${ward}</div>
+            <div class="ward-count">${wVoters.length} परिणाम</div>
+          </div>
+        </div>
+      </div>`;
+      html += `<div class="ward-body">`;
+      wVoters.forEach(v => { html += voterCardHTML(v, q); });
+      html += `</div></div>`;
+    });
+    html += '</div>';
+    content.innerHTML = html;
+    bindCards();
+
+  } else {
+    // ── Ward-first mode ─────────────────────────────────────────────────
+    const total = ALL.filter(filterStatus).length;
+    rcount.innerHTML = `<b>${total.toLocaleString()}</b> मतदाता — <b>${WARDS.length}</b> वार्ड`;
+
+    let html = '';
+    WARDS.forEach((w, wi) => {
+      const voters = w.list.filter(filterStatus);
+      if (!voters.length) return;
+
+      const isOpen = true; // all open by default
+      html += `
+        <div class="ward-section" id="ws-${w.ward}">
+          <div class="ward-header ${isOpen?'':'collapsed'}" onclick="toggleWard(${w.ward})">
+            <div class="wh-left">
+              <div class="ward-badge">${w.ward}</div>
+              <div class="ward-info">
+                <div class="ward-label">वार्ड ${w.ward}</div>
+                <div class="ward-count">${voters.length} मतदाता</div>
+              </div>
+            </div>
+            <div class="wh-right">
+              <div class="ward-arrow">▼</div>
+            </div>
+          </div>
+          <div class="ward-body ${isOpen?'':'hidden'}" id="wb-${w.ward}">`;
+
+      // Paginate: show first PAGE_SIZE, rest behind "more" button
+      const slice = voters.slice(0, PAGE_SIZE);
+      const rest  = voters.length - slice.length;
+      slice.forEach(v => { html += voterCardHTML(v, ''); });
+      if (rest > 0) {
+        html += `<div class="more-wrap"><button class="more-btn" style="display:block"
+          onclick="loadMore(${w.ward})">और देखें (${rest} शेष)</button></div>`;
+      }
+      html += `</div></div>`;
+    });
+
+    content.innerHTML = html || `<div class="state"><span class="state-emoji">📋</span><h3>कोई डेटा नहीं</h3></div>`;
+    bindCards();
+  }
+}
+
+/* ━━━ Voter card HTML ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function voterCardHTML(v, q) {
+  const relLabel = v.relation_type === 'husband' ? 'पति' : 'पिता';
+  const spClass  = `sp-${v.status||'active'}`;
+  const gClass   = `gpill-${v.gender}`;
+  const gLabel   = v.gender === 'M' ? 'पुरुष' : 'महिला';
+  const stLabel  = { active:'Active', deleted:'Deleted', modified:'Modified' }[v.status] || v.status;
+  const delClass = v.status === 'deleted' ? 'deleted' : '';
+  const statusCls = v.status !== 'active' ? `status-${v.status}` : '';
+
+  return `
+    <div class="vcard ${statusCls}" data-epic="${esc(v.epic)}">
+      <div class="vc-top">
+        <div class="vc-names">
+          <div class="vc-name-hi ${delClass}">${hl(v.name_hi, q)}</div>
+          <div class="vc-name-en">${hl(v.name_en, q)}</div>
+        </div>
+        <div class="vc-badges">
+          <span class="gpill ${gClass}">${gLabel}</span>
+          <span class="status-pill ${spClass}">${stLabel}</span>
+        </div>
+      </div>
+      <div class="vc-meta">
+        <span class="vmeta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          ${esc(v.house_no)||'—'}
+        </span>
+        <span class="vmeta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          ${v.age} वर्ष
+        </span>
+        ${v.page_no ? `<span class="vmeta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          पृ. ${v.page_no}
+        </span>` : ''}
+        <span class="vmeta loc-tag">
+          📍 <span class="hi">${hl(v.locality_hi, q)}</span>
+        </span>
+      </div>
+      <div class="vc-rel">
+        <span class="rel-lbl">${relLabel}</span>
+        <span class="rel-nm">${hl(v.relation_name_hi, q)}</span>
+      </div>
+    </div>`;
+}
+
+/* ━━━ Bind card click events ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function bindCards() {
+  document.querySelectorAll('.vcard').forEach(card => {
+    card.addEventListener('click', () => {
+      const epic = card.dataset.epic;
+      const v = ALL.find(x => x.epic === epic);
+      if (v) openDetail(v, norm(query));
+    });
+  });
+}
+
+/* ━━━ Ward toggle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function toggleWard(ward) {
+  const hdr  = document.querySelector(`#ws-${ward} .ward-header`);
+  const body = document.getElementById(`wb-${ward}`);
+  if (!body) return;
+  const isOpen = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', isOpen);
+  hdr.classList.toggle('collapsed', isOpen);
+}
+
+/* ━━━ Load more voters in a ward ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function loadMore(ward) {
+  const body = document.getElementById(`wb-${ward}`);
+  if (!body) return;
+  const w = WARDS.find(x => x.ward === ward);
+  if (!w) return;
+  const shown = body.querySelectorAll('.vcard').length;
+  const voters = w.list.filter(filterStatus);
+  const next   = voters.slice(shown, shown + PAGE_SIZE);
+  const rest   = voters.length - shown - next.length;
+
+  const moreWrap = body.querySelector('.more-wrap');
+  let frag = '';
+  next.forEach(v => { frag += voterCardHTML(v, ''); });
+  if (moreWrap) moreWrap.insertAdjacentHTML('beforebegin', frag);
+
+  if (rest > 0) {
+    body.querySelector('.more-btn').textContent = `और देखें (${rest} शेष)`;
+  } else {
+    if (moreWrap) moreWrap.remove();
+  }
+  // bind new cards
+  body.querySelectorAll('.vcard:not([data-bound])').forEach(card => {
+    card.dataset.bound = '1';
+    card.addEventListener('click', () => {
+      const v = ALL.find(x => x.epic === card.dataset.epic);
+      if (v) openDetail(v, '');
+    });
+  });
+}
+
+/* ━━━ Detail sheet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function openDetail(v, q) {
+  const relLabel  = v.relation_type === 'husband' ? 'पति' : 'पिता';
+  const relIcon   = v.relation_type === 'husband' ? '💑' : '👨‍👦';
+  const gLabel    = v.gender === 'M' ? 'पुरुष' : 'महिला';
+  const gColor    = v.gender === 'M' ? 'blue'  : 'pink';
+  const stLabel   = { active:'✅ Active', deleted:'🚫 Deleted', modified:'⚠️ Modified' }[v.status] || v.status;
+  const stColor   = v.status === 'active' ? 'green' : v.status === 'deleted' ? '' : '';
+
+  document.getElementById('sheetBody').innerHTML = `
+    <div class="sh-top">
+      <div>
+        <div class="sh-name-hi">${hl(v.name_hi, q)}</div>
+        <div class="sh-name-en">${hl(v.name_en, q)}</div>
+      </div>
+      <button class="sh-close" onclick="closeDetail()">✕</button>
+    </div>
+
+    <div class="epic-row" id="epicRow" onclick="copyEpic('${esc(v.epic)}')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.3"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span class="epic-id" id="epicTxt">${esc(v.epic)}</span>
+      <span class="epic-copy">📋 Copy</span>
+    </div>
+
+    <div class="dgrid">
+      <div class="ditem">
+        <div class="dlabel">लिंग / Gender</div>
+        <div class="dval ${gColor}">${gLabel}</div>
+      </div>
+      <div class="ditem">
+        <div class="dlabel">आयु / Age</div>
+        <div class="dval">${v.age} <span style="font-size:13px;color:#94a3b8;font-weight:400">वर्ष</span></div>
+      </div>
+      <div class="ditem">
+        <div class="dlabel">मकान नं.</div>
+        <div class="dval">${esc(v.house_no)||'—'}</div>
+      </div>
+      <div class="ditem">
+        <div class="dlabel">क्रमांक / Serial</div>
+        <div class="dval">#${v.serial}</div>
+      </div>
+      <div class="ditem">
+        <div class="dlabel">वार्ड / Ward</div>
+        <div class="dval" style="color:#f97316">${v.ward||'—'}</div>
+      </div>
+      <div class="ditem">
+        <div class="dlabel">PDF पृष्ठ</div>
+        <div class="dval" style="color:#0284c7">${v.page_no||'—'}</div>
+      </div>
+      <div class="ditem">
+        <div class="dlabel">Status</div>
+        <div class="dval" style="font-size:14px">${stLabel}</div>
+      </div>
+      <div class="ditem">
+        <div class="dlabel">Source</div>
+        <div class="dval" style="font-size:14px;color:#64748b">${esc(v.source)||'—'}</div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-icon">${relIcon}</div>
+      <div>
+        <div class="rel-type">${relLabel} का नाम</div>
+        <div class="rel-name-hi">${hl(v.relation_name_hi, q)}</div>
+      </div>
+    </div>
+
+    <div class="loc-row">
+      📍&nbsp;<span class="hi">${hl(v.locality_hi, q)}</span>
+    </div>
+  `;
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+async function copyEpic(text) {
+  const row = document.getElementById('epicRow');
+  const txt = document.getElementById('epicTxt');
+  try {
+    await navigator.clipboard.writeText(text);
+    row.classList.add('copied');
+    txt.textContent = '✓ कॉपी हो गया!';
+    setTimeout(() => { row.classList.remove('copied'); txt.textContent = text; }, 2000);
+  } catch(_) {}
+}
+
+function closeDetail() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ━━━ Events ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+let deb;
+document.getElementById('q').addEventListener('input', e => {
+  query = e.target.value;
+  document.getElementById('clrBtn').classList.toggle('on', query.length > 0);
+  clearTimeout(deb);
+  deb = setTimeout(render, 220);
+});
+
+document.getElementById('clrBtn').addEventListener('click', () => {
+  document.getElementById('q').value = '';
+  query = '';
+  document.getElementById('clrBtn').classList.remove('on');
+  render();
+  document.getElementById('q').focus();
+});
+
+document.getElementById('chips').addEventListener('click', e => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  gf = btn.dataset.f;
+  render();
+});
+
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeDetail();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+// Swipe-down to close
+let ty = 0;
+document.getElementById('sheet').addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, {passive:true});
+document.getElementById('sheet').addEventListener('touchend',   e => { if (e.changedTouches[0].clientY - ty > 80) closeDetail(); }, {passive:true});
+
+/* ━━━ Go ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+boot();
+</script>
+</body>
+</html>
