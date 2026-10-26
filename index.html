@@ -2,1227 +2,2491 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
-  <title>मतदाता सूची — Voter List Masalpur</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="description" content="Masalpur Municipality Voter List 2026 - Fast Search, Ward-wise Roll, Digital Voter Slip & WhatsApp Share" />
+  <title>Voter List · Masalpur (मतदाता सूची 2026) — Search & Slips</title>
+
+  <!-- Google Fonts: Noto Sans Devanagari for crisp Hindi typography + Plus Jakarta Sans for clean numbers & UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
-  /* ── Reset ──────────────────────────────────────────────────────────── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #f1f5f9;
-    color: #1e293b;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
-  .hi { font-family: 'Noto Sans Devanagari', sans-serif; }
+    /* ━━━ Design Tokens: Rounded Theme & Crisp White Palette ━━━━━━━━━ */
+    :root {
+      --primary: #ea580c;
+      --primary-dark: #c2410c;
+      --primary-light: #fff7ed;
+      --primary-glow: rgba(234, 88, 12, 0.2);
+      --gradient-brand: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%);
 
-  /* ── Header ──────────────────────────────────────────────────────────── */
-  header {
-    background: #fff;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 16px 18px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
+      --male: #4f46e5;
+      --male-bg: #eef2ff;
+      --male-border: #c7d2fe;
+      --male-dark: #3730a3;
 
-  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-  .brand-logo {
-    width: 46px; height: 46px; flex-shrink: 0;
-    background: linear-gradient(135deg, #f97316, #fb923c);
-    border-radius: 13px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    box-shadow: 0 3px 10px rgba(249,115,22,0.3);
-  }
-  .brand-title {
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 19px; font-weight: 700; color: #0f172a;
-    line-height: 1.2;
-  }
-  .brand-sub { font-size: 11px; color: #94a3b8; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 2px; }
+      --female: #db2777;
+      --female-bg: #fdf2f8;
+      --female-border: #fbcfe8;
+      --female-dark: #9d174d;
 
-  /* stats */
-  .stats-row {
-    display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
-    padding-bottom: 14px;
-  }
-  .stats-row::-webkit-scrollbar { display: none; }
-  .stat {
-    display: flex; align-items: center; gap: 5px;
-    background: #f8fafc; border: 1px solid #e2e8f0;
-    border-radius: 20px; padding: 5px 11px;
-    white-space: nowrap; font-size: 12px; color: #64748b;
-    flex-shrink: 0;
-  }
-  .stat strong { color: #0f172a; font-weight: 600; }
-  .sdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --success-border: #86efac;
 
-  /* ── Search sticky ───────────────────────────────────────────────────── */
-  .sticky-bar {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid #e2e8f0;
-    padding: 11px 16px 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --danger-border: #fca5a5;
 
-  .search-wrap { position: relative; margin-bottom: 10px; }
-  .search-ico {
-    position: absolute; left: 13px; top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8; font-size: 16px; pointer-events: none;
-  }
-  #q {
-    width: 100%;
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 12px 40px 12px 40px;
-    font-size: 16px; color: #0f172a;
-    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    caret-color: #f97316;
-  }
-  #q::placeholder { color: #cbd5e1; }
-  #q:focus {
-    border-color: #f97316;
-    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
-    background: #fff;
-  }
-  .clr {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    width: 26px; height: 26px; background: #e2e8f0; border: none;
-    border-radius: 50%; color: #64748b; font-size: 12px;
-    cursor: pointer; display: none; align-items: center; justify-content: center;
-    transition: background 0.15s;
-  }
-  .clr:hover { background: #f97316; color: #fff; }
-  .clr.on { display: flex; }
+      --warning: #d97706;
+      --warning-bg: #fef3c7;
 
-  /* filter chips */
-  .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
-  .chips::-webkit-scrollbar { display: none; }
-  .chip {
-    padding: 5px 13px; border-radius: 20px;
-    border: 1.5px solid #e2e8f0; background: #fff;
-    color: #64748b; font-size: 12px; font-weight: 500;
-    cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
-    transition: all 0.15s;
-  }
-  .chip:hover { border-color: #f97316; color: #f97316; }
-  .chip.active { background: #f97316; border-color: #f97316; color: #fff; font-weight: 600; }
-  .chip.male.active   { background: #6366f1; border-color: #6366f1; }
-  .chip.female.active { background: #ec4899; border-color: #ec4899; }
+      --surface: #ffffff;
+      --surface-subtle: #fafaf9;
+      --surface-border: #e2e8f0;
+      --bg: #ffffff;
 
-  /* filter dropdowns row */
-  .filter-row-2 {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-    align-items: center;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
-  }
-  .filter-row-2::-webkit-scrollbar { display: none; }
-  .f-select-wrap {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .f-ico {
-    position: absolute;
-    left: 8px;
-    font-size: 11px;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .f-select-wrap select {
-    appearance: none;
-    -webkit-appearance: none;
-    background: #fff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 18px;
-    padding: 5px 24px 5px 24px;
-    font-size: 12px;
-    color: #475569;
-    font-weight: 500;
-    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
-    cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%2394a3b8'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 9px center;
-    transition: all 0.15s;
-    max-width: 180px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .f-select-wrap select:hover {
-    border-color: #f97316;
-  }
-  .f-select-wrap select.has-val {
-    background-color: #fff7ed;
-    border-color: #f97316;
-    color: #c2410c;
-    font-weight: 600;
-  }
-  .reset-filters-btn {
-    display: none;
-    align-items: center;
-    gap: 3px;
-    padding: 5px 11px;
-    background: #fee2e2;
-    border: 1px solid #fca5a5;
-    border-radius: 18px;
-    color: #b91c1c;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    flex-shrink: 0;
-    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
-    transition: all 0.15s;
-  }
-  .reset-filters-btn:hover { background: #fecaca; }
-  .reset-filters-btn.show { display: inline-flex; }
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
 
-  /* active filter badge chips in results bar */
-  .active-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 6px;
-  }
-  .act-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
-    color: #c2410c;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  .act-tag:hover { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+      --radius-full: 9999px;
 
-  /* ── Main ────────────────────────────────────────────────────────────── */
-  main { max-width: 720px; margin: 0 auto; padding: 16px 14px 100px; }
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.03);
+      --shadow-card: 0 2px 10px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.02);
+      --shadow-card-hover: 0 8px 24px -2px rgba(234,88,12,0.1), 0 2px 8px rgba(15,23,42,0.04);
+      --shadow-sheet: 0 -12px 40px rgba(15,23,42,0.18);
+    }
 
-  /* results bar */
-  .rbar {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px; min-height: 22px;
-  }
-  .rcount { font-size: 12px; color: #64748b; }
-  .rcount b { color: #f97316; font-size: 13px; }
+    /* ━━━ Reset & Base ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  /* ── Ward section ────────────────────────────────────────────────────── */
-  .ward-section { margin-bottom: 14px; }
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
 
-  .ward-header {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px 14px 0 0;
-    padding: 13px 16px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.15s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .ward-header:hover { background: #fef9f5; }
-  .ward-header.collapsed { border-radius: 14px; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      color: var(--text-main);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.45;
+      padding-bottom: max(32px, env(safe-area-inset-bottom, 32px));
+    }
 
-  .wh-left { display: flex; align-items: center; gap: 10px; }
+    .hi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+    }
 
-  .ward-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-width: 38px; height: 38px; padding: 0 10px;
-    background: linear-gradient(135deg, #f97316, #fb923c);
-    border-radius: 10px; color: #fff;
-    font-weight: 800; font-size: 15px;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(249,115,22,0.3);
-  }
+    button {
+      font-family: inherit;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background: transparent;
+      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    }
 
-  .ward-info { line-height: 1.3; }
-  .ward-label {
-    font-weight: 700; font-size: 14px; color: #0f172a;
-  }
-  .ward-count { font-size: 12px; color: #64748b; margin-top: 1px; }
+    button:active {
+      transform: scale(0.96);
+    }
 
-  .wh-right { display: flex; align-items: center; gap: 8px; }
-  .ward-arrow {
-    width: 28px; height: 28px; background: #f1f5f9;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    color: #94a3b8; font-size: 13px; flex-shrink: 0;
-    transition: transform 0.25s, background 0.15s;
-  }
-  .ward-header:not(.collapsed) .ward-arrow { transform: rotate(180deg); background: #fff4ed; color: #f97316; }
+    input, select {
+      font-family: inherit;
+    }
 
-  .ward-body {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-top: none;
-    border-radius: 0 0 14px 14px;
-    overflow: hidden;
-  }
-  .ward-body.hidden { display: none; }
+    /* ━━━ Header: Clean White & Rounded Theme ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .app-header {
+      background: #ffffff;
+      color: var(--text-main);
+      position: relative;
+      padding: 16px 18px 14px;
+      border-bottom: 1.5px solid var(--surface-border);
+      box-shadow: 0 2px 10px rgba(15,23,42,0.03);
+    }
 
-  /* ── Voter card ──────────────────────────────────────────────────────── */
-  .vcard {
-    border-bottom: 1px solid #f1f5f9;
-    padding: 13px 16px;
-    cursor: pointer;
-    transition: background 0.15s;
-    position: relative;
-  }
-  .vcard:last-child { border-bottom: none; }
-  .vcard:hover { background: #fef9f5; }
-  .vcard:active { background: #fff4ed; }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
 
-  /* status strip on left */
-  .vcard::before {
-    content: ''; position: absolute;
-    left: 0; top: 8px; bottom: 8px; width: 3px;
-    border-radius: 0 3px 3px 0;
-    opacity: 0; transition: opacity 0.15s;
-  }
-  .vcard:hover::before { opacity: 1; background: #f97316; }
-  .vcard.status-deleted { opacity: 0.6; }
-  .vcard.status-modified::before { opacity: 1; background: #f59e0b; }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-  .vc-top {
-    display: flex; align-items: flex-start;
-    justify-content: space-between; gap: 10px;
-    margin-bottom: 5px;
-  }
+    .brand-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--gradient-brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 14px var(--primary-glow);
+      flex-shrink: 0;
+    }
 
-  .vc-names { flex: 1; min-width: 0; }
-  .vc-name-hi {
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 16px; font-weight: 700; color: #0f172a;
-    line-height: 1.3;
-  }
-  .vc-name-hi.deleted { text-decoration: line-through; color: #94a3b8; }
-  .vc-name-en { font-size: 12px; color: #94a3b8; margin-top: 2px; text-transform: capitalize; }
+    .brand-title {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
 
-  .vc-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+      font-weight: 600;
+    }
 
-  .gpill {
-    padding: 3px 9px; border-radius: 20px;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
-  }
-  .gpill-M { background: #eff6ff; color: #6366f1; border: 1px solid #c7d2fe; }
-  .gpill-F { background: #fdf2f8; color: #ec4899; border: 1px solid #fbcfe8; }
+    .badge-year {
+      background: var(--primary-light);
+      border: 1px solid #fed7aa;
+      color: var(--primary-dark);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-  .status-pill {
-    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-    padding: 2px 7px; border-radius: 4px;
-  }
-  .sp-active   { background: #dcfce7; color: #16a34a; }
-  .sp-deleted  { background: #fee2e2; color: #dc2626; }
-  .sp-modified { background: #fef9c3; color: #ca8a04; }
+    .ward-jump-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      border: 1.5px solid #fed7aa;
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(234,88,12,0.1);
+    }
+    .ward-jump-btn:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
 
-  /* meta row */
-  .vc-meta {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
-  }
-  .vmeta { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #64748b; }
-  .vmeta svg { flex-shrink: 0; opacity: 0.7; }
+    /* ─── Stats Horizontal Carousel ─── */
+    .stats-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+    .stats-scroll::-webkit-scrollbar { display: none; }
 
-  /* relation */
-  .vc-rel {
-    display: flex; align-items: center; gap: 6px;
-    border-top: 1px solid #f1f5f9; padding-top: 7px;
-  }
-  .rel-lbl {
-    font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.5px; padding: 2px 7px; border-radius: 4px;
-    background: #f1f5f9; color: #94a3b8; flex-shrink: 0;
-  }
-  .rel-nm {
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 14px; color: #334155; font-weight: 500;
-  }
+    .stat-card {
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 8px 13px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .stat-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .stat-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
 
-  mark {
-    background: rgba(249,115,22,0.15);
-    color: #c2410c;
-    border-radius: 3px; padding: 0 2px;
-  }
+    /* ━━━ Sticky Search & Clean Rounded Dropdowns Panel ━━━━━━━━━━━━━ */
+    .sticky-control-panel {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1.5px solid var(--surface-border);
+      box-shadow: 0 4px 16px -2px rgba(15,23,42,0.04);
+      padding: 12px 14px 10px;
+    }
 
-  /* locality tag */
-  .loc-tag {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 11px; color: #64748b;
-    background: #f8fafc; border: 1px solid #e2e8f0;
-    border-radius: 4px; padding: 2px 7px;
-  }
+    /* Rounded Pill Search Bar */
+    .search-box-wrap {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .search-icon-svg {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      pointer-events: none;
+      transition: color 0.15s;
+    }
+    .search-input {
+      width: 100%;
+      height: 48px;
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-full);
+      padding: 0 44px 0 46px;
+      font-size: 15px;
+      color: var(--text-main);
+      font-family: 'Noto Sans Devanagari', 'Plus Jakarta Sans', sans-serif;
+      outline: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .search-input::placeholder {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+    .search-input:focus {
+      background: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3.5px var(--primary-glow);
+    }
+    .search-input:focus ~ .search-icon-svg {
+      color: var(--primary);
+    }
+    .search-clear-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      background: #e2e8f0;
+      color: #64748b;
+      border-radius: var(--radius-full);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .search-clear-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    .search-clear-btn.active {
+      display: flex;
+    }
 
-  /* ── Empty / Loading ─────────────────────────────────────────────────── */
-  .state {
-    text-align: center; padding: 60px 24px;
-    background: #fff; border-radius: 14px;
-    border: 1px solid #e2e8f0;
-  }
-  .state-emoji { font-size: 48px; margin-bottom: 14px; display: block; }
-  .state h3 {
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 18px; color: #0f172a; margin-bottom: 8px;
-  }
-  .state p { font-size: 13px; color: #64748b; line-height: 1.7; }
-  .state code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; color: #f97316; font-size: 12px; }
-  .spinner {
-    width: 36px; height: 36px;
-    border: 3px solid #e2e8f0; border-top-color: #f97316;
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-    margin: 0 auto 14px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+    /* Rounded Dropdowns Row (No Chips) */
+    .filter-dropdowns-row {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+    .filter-dropdowns-row::-webkit-scrollbar { display: none; }
 
-  /* load more */
-  .more-wrap { text-align: center; padding: 12px 0 4px; }
-  .more-btn {
-    padding: 9px 22px; background: #f8fafc;
-    border: 1.5px solid #e2e8f0; color: #64748b;
-    border-radius: 10px; font-size: 13px; cursor: pointer;
-    transition: all 0.15s; display: none;
-  }
-  .more-btn:hover { border-color: #f97316; color: #f97316; background: #fff; }
+    .dropdown-pill-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .dropdown-pill-wrap select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-full);
+      padding: 6px 28px 6px 13px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      font-family: 'Noto Sans Devanagari', 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%2364748b'%3E%3Cpath d='M0 0l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      max-width: 175px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      transition: all 0.15s;
+    }
+    .dropdown-pill-wrap select:focus,
+    .dropdown-pill-wrap select:hover {
+      border-color: var(--primary);
+    }
+    .dropdown-pill-wrap select.has-val {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
 
-  /* ── Bottom sheet modal ──────────────────────────────────────────────── */
-  .overlay {
-    display: none; position: fixed; inset: 0; z-index: 100;
-    background: rgba(15,23,42,0.5);
-    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-    align-items: flex-end; justify-content: center;
-  }
-  .overlay.open { display: flex; animation: fadein 0.2s ease; }
-  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+    .btn-reset-filters {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px;
+      background: var(--danger-bg);
+      border: 1.5px solid var(--danger-border);
+      border-radius: var(--radius-full);
+      color: var(--danger);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-reset-filters.show {
+      display: inline-flex;
+    }
 
-  .sheet {
-    background: #fff;
-    border-radius: 22px 22px 0 0;
-    width: 100%; max-width: 720px;
-    max-height: 92vh; overflow-y: auto;
-    animation: slideup 0.28s cubic-bezier(.34,1.56,.64,1);
-    padding-bottom: env(safe-area-inset-bottom, 24px);
-  }
-  @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    /* Active filter badges in result bar */
+    .active-filters-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 6px;
+    }
+    .filter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--primary-light);
+      border: 1px solid #fed7aa;
+      color: var(--primary-dark);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+    }
+    .filter-tag:hover {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger);
+    }
 
-  .sh-handle {
-    width: 38px; height: 4px; background: #e2e8f0;
-    border-radius: 4px; margin: 12px auto 0;
-  }
-  .sh-body { padding: 20px 20px 28px; }
+    /* ━━━ Main Layout ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .main-container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 14px 12px 80px;
+    }
 
-  .sh-top {
-    display: flex; align-items: flex-start;
-    justify-content: space-between; margin-bottom: 16px;
-  }
-  .sh-name-hi {
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 24px; font-weight: 800; color: #0f172a; line-height: 1.2;
-  }
-  .sh-name-en { font-size: 13px; color: #94a3b8; margin-top: 4px; text-transform: capitalize; }
-  .sh-close {
-    width: 34px; height: 34px; background: #f1f5f9;
-    border: none; border-radius: 50%; cursor: pointer;
-    font-size: 17px; color: #64748b; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; margin-left: 10px;
-  }
-  .sh-close:hover { background: #fee2e2; color: #dc2626; }
+    /* Result summary status bar */
+    .results-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+    .results-count-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .results-count-text strong {
+      color: var(--text-main);
+      font-weight: 800;
+    }
+    .results-count-text .highlight-count {
+      color: var(--primary);
+      font-weight: 800;
+    }
 
-  /* EPIC chip */
-  .epic-row {
-    display: flex; align-items: center; gap: 8px;
-    background: #f0f9ff; border: 1px solid #bae6fd;
-    border-radius: 10px; padding: 10px 14px;
-    margin-bottom: 16px; cursor: pointer; transition: all 0.15s;
-  }
-  .epic-row:hover { background: #e0f2fe; }
-  .epic-row.copied { background: #f0fdf4; border-color: #86efac; }
-  .epic-id {
-    font-family: 'Inter', monospace; font-size: 13px;
-    font-weight: 700; color: #0284c7; letter-spacing: 0.4px;
-    flex: 1; word-break: break-all;
-  }
-  .epic-row.copied .epic-id { color: #16a34a; }
-  .epic-copy { font-size: 12px; color: #94a3b8; flex-shrink: 0; }
+    /* ━━━ Ward Accordion Section (Rounded Theme) ━━━━━━━━━━━━━━━━━━━━━━━ */
+    .ward-section-card {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      border: 1.5px solid var(--surface-border);
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .ward-section-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+      border-color: #cbd5e1;
+    }
 
-  /* detail grid */
-  .dgrid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;
-  }
-  .ditem {
-    background: #f8fafc; border: 1px solid #e2e8f0;
-    border-radius: 10px; padding: 12px 14px;
-  }
-  .dlabel {
-    font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 4px;
-  }
-  .dval {
-    font-size: 18px; font-weight: 700; color: #0f172a;
-  }
-  .dval-hi { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 16px; }
-  .dval.blue { color: #6366f1; }
-  .dval.pink { color: #ec4899; }
-  .dval.green { color: #16a34a; }
+    .ward-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #ffffff;
+      cursor: pointer;
+      user-select: none;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      transition: background 0.15s;
+    }
+    .ward-card-header:hover {
+      background: #fafaf9;
+    }
+    .ward-card-header.is-search-group {
+      cursor: default;
+      background: #ffffff;
+      border-bottom: 1.5px solid var(--surface-border);
+    }
 
-  /* relation card */
-  .rel-card {
-    background: #fff7ed; border: 1px solid #fed7aa;
-    border-radius: 10px; padding: 14px;
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 10px;
-  }
-  .rel-icon {
-    width: 40px; height: 40px; flex-shrink: 0;
-    background: #fff; border: 1px solid #fed7aa;
-    border-radius: 50%; font-size: 18px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .rel-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #f97316; margin-bottom: 3px; }
-  .rel-name-hi {
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 18px; font-weight: 700; color: #0f172a;
-  }
+    .ward-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ward-badge-pill {
+      min-width: 46px;
+      height: 46px;
+      padding: 0 10px;
+      border-radius: var(--radius-md);
+      background: var(--gradient-brand);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 10px var(--primary-glow);
+      flex-shrink: 0;
+    }
+    .ward-badge-lbl {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+    .ward-badge-num {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
 
-  /* locality in sheet */
-  .loc-row {
-    display: flex; align-items: center; gap: 8px;
-    background: #f8fafc; border: 1px solid #e2e8f0;
-    border-radius: 10px; padding: 11px 14px;
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 14px; color: #334155; font-weight: 500;
-    margin-bottom: 10px;
-  }
+    .ward-header-title {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+    .ward-header-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 600;
+    }
 
-  /* ── Search result mode ──────────────────────────────────────────────── */
-  .search-results { }
-  .sr-group-label {
-    font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.8px; color: #94a3b8;
-    padding: 8px 4px 6px; margin-top: 4px;
-  }
+    .ward-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ward-chevron-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-full);
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s, color 0.15s;
+    }
+    .ward-card-header:not(.collapsed) .ward-chevron-circle {
+      transform: rotate(180deg);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
 
-  @media (min-width: 500px) {
-    .sheet { border-radius: 20px; margin: 16px; width: calc(100% - 32px); max-width: 688px; }
-  }
+    .ward-card-body {
+      border-top: 1.5px solid var(--surface-border);
+      background: #ffffff;
+      padding: 8px 6px;
+      display: block;
+    }
+    .ward-card-body.hidden {
+      display: none;
+    }
+
+    /* ━━━ Voter Card with Prominent Serial Number Box ━━━━━━━━━━━━━━━━━ */
+    .voter-card {
+      position: relative;
+      padding: 14px 14px 12px;
+      border-radius: var(--radius-lg);
+      margin: 8px 4px;
+      background: #ffffff;
+      border: 1.5px solid #f1f5f9;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.03);
+      transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .voter-card:hover {
+      border-color: #fed7aa;
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-1px);
+    }
+    .voter-card:active {
+      background: #fff7ed;
+      transform: scale(0.98);
+    }
+
+    .voter-card.status-deleted {
+      opacity: 0.65;
+      background: #fffafa;
+    }
+
+    /* Main layout: Serial box on left + Voter info on right */
+    .vc-main-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    /* ─── Prominent Serial Number Box on List Screen ─── */
+    .vc-serial-box {
+      min-width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      margin-top: 2px;
+    }
+    .voter-card.gender-M .vc-serial-box {
+      background: var(--male-bg);
+      border-color: var(--male-border);
+      color: var(--male-dark);
+    }
+    .voter-card.gender-F .vc-serial-box {
+      background: var(--female-bg);
+      border-color: var(--female-border);
+      color: var(--female-dark);
+    }
+    .vc-serial-lbl {
+      font-size: 8.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1;
+      opacity: 0.85;
+    }
+    .vc-serial-num {
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.15;
+      font-family: 'Plus Jakarta Sans', monospace;
+      margin-top: 1px;
+    }
+
+    .vc-details-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Card Top Bar */
+    .vc-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+    .vc-name-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+    .vc-hindi-name {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+      word-break: break-word;
+    }
+    .vc-hindi-name.is-deleted {
+      text-decoration: line-through;
+      color: var(--danger);
+    }
+    .vc-eng-name {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+      text-transform: capitalize;
+      font-weight: 600;
+    }
+
+    .vc-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .gender-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+    }
+    .gender-pill.male {
+      background: var(--male-bg);
+      color: var(--male-dark);
+      border: 1px solid var(--male-border);
+    }
+    .gender-pill.female {
+      background: var(--female-bg);
+      color: var(--female-dark);
+      border: 1px solid var(--female-border);
+    }
+
+    .status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .status-badge.active {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+    .status-badge.deleted {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+    .status-badge.modified {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    /* Relation Row */
+    .vc-relation-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      background: #fafaf9;
+      border-radius: var(--radius-md);
+      padding: 5px 10px;
+      border: 1px solid #f1f5f9;
+    }
+    .rel-badge {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+    .rel-val {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    /* Key Information Badges Row */
+    .vc-meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      font-size: 11px;
+      color: #475569;
+      font-weight: 700;
+    }
+    .meta-tag.highlight-epic {
+      background: #f0f9ff;
+      border-color: #bae6fd;
+      color: #0369a1;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .meta-tag.highlight-house {
+      background: #fefce8;
+      border-color: #fef08a;
+      color: #854d0e;
+    }
+    .meta-tag.highlight-loc {
+      background: #f8fafc;
+      color: #475569;
+    }
+
+    /* ─── Voter Card Quick Action Bar (Rounded Pill Buttons) ─── */
+    .vc-quick-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding-top: 10px;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .vc-act-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 7px 12px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      color: #475569;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      transition: all 0.15s ease;
+    }
+    .vc-act-btn:hover {
+      background: #ffffff;
+      border-color: #cbd5e1;
+    }
+    .vc-act-btn.whatsapp {
+      color: #15803d;
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .vc-act-btn.whatsapp:hover {
+      background: #dcfce7;
+    }
+    .vc-act-btn.copy {
+      color: #0369a1;
+      background: #f0f9ff;
+      border-color: #bae6fd;
+    }
+    .vc-act-btn.family {
+      color: #c2410c;
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+
+    /* Highlight Search Marks */
+    mark {
+      background: rgba(234, 88, 12, 0.2);
+      color: var(--primary-dark);
+      font-weight: 700;
+      border-radius: 3px;
+      padding: 0 2px;
+    }
+
+    /* ━━━ Load More Button ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .load-more-container {
+      text-align: center;
+      padding: 12px 14px 6px;
+    }
+    .btn-load-more {
+      width: 100%;
+      padding: 11px 18px;
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-load-more:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ━━━ Empty & Loading States ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .state-banner {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      border: 1.5px solid var(--surface-border);
+      padding: 48px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .state-icon-emoji {
+      font-size: 44px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .state-title {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .state-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 380px;
+      margin: 0 auto 16px;
+    }
+    .spinner-ring {
+      width: 38px;
+      height: 38px;
+      border: 3.5px solid #e2e8f0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spinAnim 0.75s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spinAnim {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ━━━ Bottom Sheet Detail Modal (Rounded Theme) ━━━━━━━━━━━━━━━━━━━ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .bottom-sheet {
+      background: #ffffff;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      width: 100%;
+      max-width: 640px;
+      max-height: 92vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: var(--shadow-sheet);
+      padding-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+    }
+    .modal-overlay.open .bottom-sheet {
+      transform: translateY(0);
+    }
+
+    .sheet-handle-bar {
+      width: 44px;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: var(--radius-full);
+      margin: 12px auto 4px;
+    }
+
+    .sheet-content-inner {
+      padding: 16px 20px 24px;
+    }
+
+    /* Digital Voter Slip Styling */
+    .voter-slip-card {
+      background: #ffffff;
+      border: 2px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Tricolor Top Stripe */
+    .voter-slip-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%);
+    }
+
+    .slip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed #cbd5e1;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .slip-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slip-brand-logo {
+      font-size: 26px;
+    }
+    .slip-brand-txt {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+    .slip-brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .btn-sheet-close {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-full);
+      background: #f1f5f9;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .btn-sheet-close:hover {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .slip-voter-profile {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .slip-name-hi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+    .slip-name-en {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      text-transform: capitalize;
+      font-weight: 600;
+    }
+
+    .slip-epic-banner {
+      background: #f0f9ff;
+      border: 1.5px solid #bae6fd;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .slip-epic-banner:hover {
+      background: #e0f2fe;
+    }
+    .slip-epic-banner.copied {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+    .epic-code-display {
+      font-family: monospace;
+      font-size: 17px;
+      font-weight: 800;
+      color: #0369a1;
+      letter-spacing: 0.5px;
+    }
+    .slip-epic-banner.copied .epic-code-display {
+      color: var(--success);
+    }
+    .epic-copy-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0284c7;
+    }
+
+    /* Detail Parameters Grid */
+    .slip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .slip-cell {
+      background: #f8fafc;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+    .slip-cell-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+    .slip-cell-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+    }
+    .slip-cell-val.male { color: var(--male); }
+    .slip-cell-val.female { color: var(--female); }
+    .slip-cell-val.ward { color: var(--primary); }
+
+    /* Relation & Locality in Sheet */
+    .slip-wide-cell {
+      background: #f8fafc;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 11px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slip-wide-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .slip-wide-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .slip-wide-val {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Sheet Primary Action Buttons (Pill Rounded) */
+    .sheet-action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn-sheet-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 800;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      color: #ffffff;
+    }
+    .btn-sheet-primary.whatsapp {
+      background: #16a34a;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+    }
+    .btn-sheet-primary.print {
+      background: #0284c7;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+    }
+
+    /* ─── Same House Members Section (Family Finder) ─── */
+    .family-section {
+      background: #f8fafc;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .family-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .family-title {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .family-count-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: #fed7aa;
+      color: #9a3412;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+    }
+
+    .family-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .family-member-item {
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .family-member-item:hover {
+      border-color: var(--primary);
+      background: #fff7ed;
+      transform: translateX(2px);
+    }
+    .family-item-name {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .family-item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+      font-weight: 600;
+    }
+
+    /* ━━━ Ward Jump Drawer Grid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .ward-drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 16px 0;
+    }
+    .ward-drawer-btn {
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+    }
+    .ward-drawer-btn:hover {
+      border-color: var(--primary);
+      background: #fff7ed;
+    }
+    .ward-drawer-btn.active {
+      background: var(--gradient-brand);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+    .ward-drawer-btn.active .ward-drawer-count {
+      color: rgba(255,255,255,0.85);
+    }
+    .ward-drawer-num {
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+    .ward-drawer-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    /* ━━━ Floating Action Buttons (FAB) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .fab-container {
+      position: fixed;
+      bottom: max(20px, env(safe-area-inset-bottom, 20px));
+      right: 16px;
+      z-index: 70;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .fab-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius-full);
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(15,23,42,0.2);
+      font-size: 18px;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.2s ease;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+    }
+    .fab-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .fab-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* ━━━ Toast Notification ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .toast-pill {
+      position: fixed;
+      bottom: max(30px, env(safe-area-inset-bottom, 30px));
+      left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      box-shadow: 0 6px 20px rgba(15,23,42,0.25);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .toast-pill.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ━━━ Print Media Styles ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    @media print {
+      body { background: #fff; color: #000; }
+      .app-header, .sticky-control-panel, .fab-container, .vc-quick-actions, .btn-sheet-close, .sheet-action-row {
+        display: none !important;
+      }
+      .modal-overlay {
+        position: static;
+        display: block !important;
+        background: transparent;
+      }
+      .bottom-sheet {
+        transform: none !important;
+        box-shadow: none;
+        max-height: none;
+        padding: 0;
+      }
+      .voter-slip-card {
+        border: 2px solid #000;
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- ── HEADER ─────────────────────────────────────────────────────────────── -->
-<header>
-  <div class="brand">
-    <div class="brand-logo">🗳️</div>
-    <div>
-      <div class="brand-title">मतदाता सूची</div>
-      <div class="brand-sub">Masalpur · Karauli · Rajasthan · 2026</div>
-    </div>
-  </div>
-  <div class="stats-row" id="statsRow">
-    <div class="stat"><div class="spinner" style="width:14px;height:14px;border-width:2px;margin:0"></div> &nbsp;लोड हो रहा है...</div>
-  </div>
-</header>
-
-<!-- ── STICKY SEARCH & FILTERS ─────────────────────────────────────────────── -->
-<div class="sticky-bar">
-  <div class="search-wrap">
-    <svg class="search-ico" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="search" id="q" placeholder="खोजें: Ramesh, रमेश, Santosh, EPIC नंबर..." autocomplete="off" autocorrect="off" spellcheck="false" />
-    <button class="clr" id="clrBtn">✕</button>
-  </div>
-
-  <!-- Row 1: Fast Chips -->
-  <div class="chips" id="chips">
-    <button class="chip active" data-f="all">सभी</button>
-    <button class="chip male"   data-f="M">👨 पुरुष</button>
-    <button class="chip female" data-f="F">👩 महिला</button>
-    <button class="chip" data-f="active">✅ Active</button>
-    <button class="chip" data-f="deleted">🚫 Deleted</button>
-    <button class="chip" data-f="supp">⚡ परिशिष्ट (New)</button>
-    <button class="chip" data-f="youth">🎓 युवा (18-25)</button>
-    <button class="chip" data-f="senior">🧓 60+ वरिष्ठ</button>
-  </div>
-
-  <!-- Row 2: Location & Attribute Dropdowns -->
-  <div class="filter-row-2">
-    <div class="f-select-wrap">
-      <span class="f-ico">📍</span>
-      <select id="locFilter" title="मोहल्ला / Locality">
-        <option value="">सभी मोहल्ले (All)</option>
-      </select>
-    </div>
-    <div class="f-select-wrap">
-      <span class="f-ico">🏛️</span>
-      <select id="wardFilter" title="वार्ड / Ward">
-        <option value="">सभी वार्ड (All)</option>
-      </select>
-    </div>
-    <div class="f-select-wrap">
-      <span class="f-ico">🎂</span>
-      <select id="ageFilter" title="आयु वर्ग / Age">
-        <option value="">सभी आयु (All)</option>
-        <option value="18-25">18–25 वर्ष</option>
-        <option value="26-40">26–40 वर्ष</option>
-        <option value="41-60">41–60 वर्ष</option>
-        <option value="60+">60+ वर्ष</option>
-      </select>
-    </div>
-    <div class="f-select-wrap">
-      <span class="f-ico">👥</span>
-      <select id="relFilter" title="संबंध / Relation">
-        <option value="">सभी संबंध (All)</option>
-        <option value="father">पिता (Father)</option>
-        <option value="husband">पति (Husband)</option>
-      </select>
-    </div>
-    <button class="reset-filters-btn" id="resetFiltersBtn" title="सभी फ़िल्टर रीसेट करें">✕ रीसेट</button>
-  </div>
-</div>
-
-<!-- ── MAIN ───────────────────────────────────────────────────────────────── -->
-<main>
-  <div class="rbar" id="rbar">
-    <div class="rcount" id="rcount"></div>
-    <div class="active-tags" id="activeTags"></div>
-  </div>
-  <div id="content">
-    <div class="state">
-      <div class="spinner"></div>
-      <h3>डेटा लोड हो रहा है...</h3>
-      <p>कृपया प्रतीक्षा करें</p>
-    </div>
-  </div>
-</main>
-
-<!-- ── DETAIL SHEET ───────────────────────────────────────────────────────── -->
-<div class="overlay" id="overlay">
-  <div class="sheet" id="sheet">
-    <div class="sh-handle"></div>
-    <div class="sh-body" id="sheetBody"></div>
-  </div>
-</div>
-
-<script>
-/* ━━━ Config ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const DATA_FILE = './voters.json';
-const PAGE_SIZE = 40;
-
-/* ━━━ State ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-let WARDS = [];          // raw [{ward, list:[...]}]
-let ALL   = [];          // flat array with ward injected
-let query = '';
-let gf    = 'all';       // chip filter ('all', 'M', 'F', 'active', 'deleted', 'supp', 'youth', 'senior')
-let filterLoc  = '';     // selected locality
-let filterWard = '';     // selected ward
-let filterAge  = '';     // selected age group ('18-25', '26-40', '41-60', '60+')
-let filterRel  = '';     // selected relation ('father', 'husband')
-
-/* ━━━ Helpers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const norm = s => (s||'').toLowerCase().trim();
-
-function hl(text, q) {
-  if (!q || !text) return esc(text||'');
-  const safe = esc(text);
-  const pat  = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  return safe.replace(new RegExp(`(${pat})`, 'gi'), '<mark>$1</mark>');
-}
-
-function matchVoter(v, q) {
-  if (!q) return true;
-  return norm(v.name_hi).includes(q)        ||
-         norm(v.name_en).includes(q)         ||
-         norm(v.relation_name_hi).includes(q) ||
-         norm(v.locality_hi).includes(q)      ||
-         norm(v.epic).includes(q)             ||
-         norm(v.house_no).includes(q);
-}
-
-function applyFilters(v) {
-  // Chip filter
-  if (gf === 'M' && v.gender !== 'M') return false;
-  if (gf === 'F' && v.gender !== 'F') return false;
-  if (gf === 'active' && v.status !== 'active') return false;
-  if (gf === 'deleted' && v.status !== 'deleted') return false;
-  if (gf === 'supp' && v.source !== 'supplementary') return false;
-  if (gf === 'youth' && (v.age < 18 || v.age > 25)) return false;
-  if (gf === 'senior' && (v.age < 60)) return false;
-
-  // Dropdown: Locality
-  if (filterLoc && (v.locality_hi || '').trim() !== filterLoc) return false;
-
-  // Dropdown: Ward
-  if (filterWard && String(v.ward) !== String(filterWard)) return false;
-
-  // Dropdown: Age
-  if (filterAge) {
-    const a = Number(v.age) || 0;
-    if (filterAge === '18-25' && (a < 18 || a > 25)) return false;
-    if (filterAge === '26-40' && (a < 26 || a > 40)) return false;
-    if (filterAge === '41-60' && (a < 41 || a > 60)) return false;
-    if (filterAge === '60+' && (a < 60)) return false;
-  }
-
-  // Dropdown: Relation
-  if (filterRel && v.relation_type !== filterRel) return false;
-
-  return true;
-}
-
-function hasActiveFilters() {
-  return !!(query || gf !== 'all' || filterLoc || filterWard || filterAge || filterRel);
-}
-
-/* ━━━ Boot ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-async function boot() {
-  try {
-    const r = await fetch(DATA_FILE);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-
-    let uid = 0;
-    // Support [{ward,list}] or flat array or {voters:[]}
-    if (Array.isArray(data) && data[0]?.list) {
-      WARDS = data;
-      ALL = [];
-      data.forEach(w => {
-        w.list.forEach(v => {
-          v.ward = w.ward;
-          v._id = ++uid;
-          ALL.push(v);
-        });
-      });
-    } else if (Array.isArray(data)) {
-      // flat array — group by ward field
-      const map = {};
-      data.forEach(v => {
-        v._id = ++uid;
-        (map[v.ward||0] ??= []).push(v);
-      });
-      WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
-      ALL = data;
-    } else {
-      const arr = data.voters || data.data || [];
-      const map = {};
-      arr.forEach(v => {
-        v._id = ++uid;
-        (map[v.ward||0] ??= []).push(v);
-      });
-      WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
-      ALL = arr;
-    }
-
-    buildStats();
-    populateFilterOptions();
-    render();
-  } catch(e) {
-    document.getElementById('content').innerHTML = `<div class="state">
-      <span class="state-emoji">⚠️</span>
-      <h3>फाइल नहीं मिली</h3>
-      <p><code>${DATA_FILE}</code> इसी फोल्डर में रखें।<br/>${e.message}</p>
-    </div>`;
-  }
-}
-
-/* ━━━ Populate Filter Dropdowns ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function populateFilterOptions() {
-  // Localities: count occurrences across ALL
-  const locCounts = {};
-  ALL.forEach(v => {
-    const loc = (v.locality_hi || '').trim();
-    if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
-  });
-
-  const locSelect = document.getElementById('locFilter');
-  const sortedLocs = Object.keys(locCounts).sort((a,b) => locCounts[b] - locCounts[a]);
-  let locHtml = '<option value="">📍 सभी मोहल्ले (All)</option>';
-  sortedLocs.forEach(loc => {
-    locHtml += `<option value="${esc(loc)}">${esc(loc)} (${locCounts[loc]})</option>`;
-  });
-  locSelect.innerHTML = locHtml;
-
-  // Wards
-  const wardSelect = document.getElementById('wardFilter');
-  const wardSet = [...new Set(ALL.map(v => v.ward).filter(Boolean))].sort((a,b)=>+a-+b);
-  let wardHtml = '<option value="">🏛️ सभी वार्ड (All)</option>';
-  wardSet.forEach(w => {
-    const cnt = ALL.filter(v => v.ward === w).length;
-    wardHtml += `<option value="${w}">वार्ड ${w} (${cnt})</option>`;
-  });
-  wardSelect.innerHTML = wardHtml;
-}
-
-/* ━━━ Active Filter Badges ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function renderActiveTags() {
-  const tagsWrap = document.getElementById('activeTags');
-  if (!tagsWrap) return;
-
-  const chipsLabels = {
-    M: '👨 पुरुष', F: '👩 महिला', active: '✅ Active',
-    deleted: '🚫 Deleted', supp: '⚡ परिशिष्ट', youth: '🎓 18-25 युवा', senior: '🧓 60+ वरिष्ठ'
-  };
-
-  let html = '';
-  if (gf !== 'all' && chipsLabels[gf]) {
-    html += `<span class="act-tag" onclick="setChip('all')">${chipsLabels[gf]} ✕</span>`;
-  }
-  if (filterLoc) {
-    html += `<span class="act-tag" onclick="clearFilter('loc')">📍 ${esc(filterLoc)} ✕</span>`;
-  }
-  if (filterWard) {
-    html += `<span class="act-tag" onclick="clearFilter('ward')">🏛️ वार्ड ${filterWard} ✕</span>`;
-  }
-  if (filterAge) {
-    const ageLabels = { '18-25':'18–25 वर्ष', '26-40':'26–40 वर्ष', '41-60':'41–60 वर्ष', '60+':'60+ वर्ष' };
-    html += `<span class="act-tag" onclick="clearFilter('age')">🎂 ${ageLabels[filterAge]||filterAge} ✕</span>`;
-  }
-  if (filterRel) {
-    const relLabels = { father:'पिता (Father)', husband:'पति (Husband)' };
-    html += `<span class="act-tag" onclick="clearFilter('rel')">👥 ${relLabels[filterRel]||filterRel} ✕</span>`;
-  }
-  tagsWrap.innerHTML = html;
-
-  const resetBtn = document.getElementById('resetFiltersBtn');
-  if (resetBtn) resetBtn.classList.toggle('show', hasActiveFilters());
-}
-
-function clearFilter(type) {
-  if (type === 'loc') {
-    filterLoc = '';
-    const el = document.getElementById('locFilter');
-    el.value = ''; el.classList.remove('has-val');
-  } else if (type === 'ward') {
-    filterWard = '';
-    const el = document.getElementById('wardFilter');
-    el.value = ''; el.classList.remove('has-val');
-  } else if (type === 'age') {
-    filterAge = '';
-    const el = document.getElementById('ageFilter');
-    el.value = ''; el.classList.remove('has-val');
-  } else if (type === 'rel') {
-    filterRel = '';
-    const el = document.getElementById('relFilter');
-    el.value = ''; el.classList.remove('has-val');
-  }
-  render();
-}
-
-function setChip(val) {
-  gf = val;
-  document.querySelectorAll('#chips .chip').forEach(b => {
-    b.classList.toggle('active', b.dataset.f === val);
-  });
-  render();
-}
-
-function resetAllFilters() {
-  query = '';
-  document.getElementById('q').value = '';
-  document.getElementById('clrBtn').classList.remove('on');
-
-  setChip('all');
-
-  filterLoc = '';
-  const lf = document.getElementById('locFilter');
-  lf.value = ''; lf.classList.remove('has-val');
-
-  filterWard = '';
-  const wf = document.getElementById('wardFilter');
-  wf.value = ''; wf.classList.remove('has-val');
-
-  filterAge = '';
-  const af = document.getElementById('ageFilter');
-  af.value = ''; af.classList.remove('has-val');
-
-  filterRel = '';
-  const rf = document.getElementById('relFilter');
-  rf.value = ''; rf.classList.remove('has-val');
-
-  render();
-}
-
-/* ━━━ Stats ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function buildStats() {
-  const m = ALL.filter(v=>v.gender==='M').length;
-  const f = ALL.filter(v=>v.gender==='F').length;
-  const d = ALL.filter(v=>v.status==='deleted').length;
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat"><span class="sdot" style="background:#f97316"></span> कुल <strong>${ALL.length.toLocaleString()}</strong></div>
-    <div class="stat"><span class="sdot" style="background:#6366f1"></span> पुरुष <strong>${m}</strong></div>
-    <div class="stat"><span class="sdot" style="background:#ec4899"></span> महिला <strong>${f}</strong></div>
-    <div class="stat"><span class="sdot" style="background:#16a34a"></span> वार्ड <strong>${WARDS.length}</strong></div>
-    <div class="stat"><span class="sdot" style="background:#dc2626"></span> Deleted <strong>${d}</strong></div>
-  `;
-}
-
-/* ━━━ Main render ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function render() {
-  const q = norm(query);
-  const content = document.getElementById('content');
-  const rcount  = document.getElementById('rcount');
-
-  renderActiveTags();
-
-  if (hasActiveFilters()) {
-    // ── Filtered mode: flat / ward-grouped ──────────────────────────────
-    const hits = ALL.filter(v => matchVoter(v, q) && applyFilters(v));
-    rcount.innerHTML = `<b>${hits.length.toLocaleString()}</b> परिणाम मिले`;
-
-    if (hits.length === 0) {
-      content.innerHTML = `<div class="state">
-        <span class="state-emoji">🔍</span>
-        <h3>कोई परिणाम नहीं</h3>
-        <p>चुने गए फ़िल्टर से कोई मतदाता नहीं मिला।</p>
-        <button class="more-btn" style="margin-top:12px;padding:8px 18px;display:inline-block" onclick="resetAllFilters()">फ़िल्टर रीसेट करें</button>
-      </div>`;
-      return;
-    }
-
-    // Group filtered results by ward for clarity
-    const byWard = {};
-    hits.forEach(v => { (byWard[v.ward] ??= []).push(v); });
-
-    let html = '<div class="search-results">';
-    Object.keys(byWard).sort((a,b)=>+a-+b).forEach(ward => {
-      const wVoters = byWard[ward];
-      html += `<div class="ward-section">`;
-      html += `<div class="ward-header" style="cursor:default; border-radius:14px 14px 0 0;">
-        <div class="wh-left">
-          <div class="ward-badge">${ward}</div>
-          <div class="ward-info">
-            <div class="ward-label">वार्ड ${ward}</div>
-            <div class="ward-count">${wVoters.length} परिणाम</div>
+  <!-- ── 1. CLEAN WHITE HEADER & APP BAR ───────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand-group">
+        <div class="brand-icon-box">🗳️</div>
+        <div>
+          <h1 class="brand-title">Voter List · Masalpur <span style="font-size:15px;font-weight:600;opacity:0.8">(मतदाता सूची)</span></h1>
+          <div class="brand-sub">
+            <span>Masalpur Municipality · Karauli (Raj.)</span>
+            <span class="badge-year">2026</span>
           </div>
         </div>
-      </div>`;
-      html += `<div class="ward-body">`;
-      wVoters.forEach(v => { html += voterCardHTML(v, q); });
-      html += `</div></div>`;
-    });
-    html += '</div>';
-    content.innerHTML = html;
-    bindCards();
+      </div>
+      <button class="ward-jump-btn" id="btnWardJump" title="Jump directly to any ward">
+        <span>🏛️ Select Ward (वार्ड)</span>
+      </button>
+    </div>
 
-  } else {
-    // ── Default Ward-first mode ─────────────────────────────────────────
+    <!-- Quick Stats Ribbon (White Cards) -->
+    <div class="stats-scroll" id="statsScroll">
+      <div class="stat-card">
+        <div class="spinner-ring" style="width:16px;height:16px;border-width:2.5px;margin:0"></div>
+        <span style="font-size:12px;color:#94a3b8">Loading...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── 2. STICKY SEARCH & ROUNDED DROPDOWNS PANEL (NO CHIPS) ────────── -->
+  <div class="sticky-control-panel">
+    <!-- Rounded Pill Search Bar -->
+    <div class="search-box-wrap">
+      <svg class="search-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="search"
+        id="q"
+        class="search-input"
+        placeholder="Search: Name (रमेश/Ramesh), Serial #, House, EPIC..."
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+      />
+      <button class="search-clear-btn" id="clrBtn" aria-label="Clear Search">✕</button>
+    </div>
+
+    <!-- Rounded Filter Dropdowns Row (No Chips) -->
+    <div class="filter-dropdowns-row">
+      <div class="dropdown-pill-wrap">
+        <select id="wardFilter" title="Select Ward">
+          <option value="">🏛️ All Wards (सभी वार्ड)</option>
+        </select>
+      </div>
+
+      <div class="dropdown-pill-wrap">
+        <select id="genderFilter" title="Filter by Gender">
+          <option value="">👥 All Genders (सभी लिंग)</option>
+          <option value="M">👨 Male (पुरुष)</option>
+          <option value="F">👩 Female (महिला)</option>
+        </select>
+      </div>
+
+      <div class="dropdown-pill-wrap">
+        <select id="statusFilter" title="Filter by Status">
+          <option value="">⚡ All Status (सभी स्थिति)</option>
+          <option value="active">✅ Active (सक्रिय)</option>
+          <option value="deleted">🚫 Deleted (विलोपित)</option>
+          <option value="supp">⚡ Supplementary (परिशिष्ट)</option>
+        </select>
+      </div>
+
+      <div class="dropdown-pill-wrap">
+        <select id="locFilter" title="Select Locality">
+          <option value="">📍 All Localities (सभी मोहल्ले)</option>
+        </select>
+      </div>
+
+      <div class="dropdown-pill-wrap">
+        <select id="ageFilter" title="Age Group">
+          <option value="">🎂 All Ages (सभी आयु)</option>
+          <option value="18-25">18–25 Yrs (युवा)</option>
+          <option value="26-40">26–40 Yrs</option>
+          <option value="41-60">41–60 Yrs</option>
+          <option value="60+">60+ Yrs (वरिष्ठ)</option>
+        </select>
+      </div>
+
+      <div class="dropdown-pill-wrap">
+        <select id="relFilter" title="Relation">
+          <option value="">👥 All Relations (सभी संबंध)</option>
+          <option value="father">Father (पिता)</option>
+          <option value="husband">Husband (पति)</option>
+        </select>
+      </div>
+
+      <div class="dropdown-pill-wrap">
+        <select id="sortFilter" title="Sort Order">
+          <option value="serial">↕️ Sort: Serial # (क्रमांक)</option>
+          <option value="name_hi">↕️ Sort: Name (A-Z / नाम)</option>
+          <option value="age_asc">↕️ Sort: Age (Low to High)</option>
+          <option value="age_desc">↕️ Sort: Age (High to Low)</option>
+          <option value="house">↕️ Sort: House No (मकान)</option>
+        </select>
+      </div>
+
+      <button class="btn-reset-filters" id="resetFiltersBtn" title="Reset all filters">✕ Reset (रीसेट)</button>
+    </div>
+
+    <!-- Active filter tags strip -->
+    <div class="active-filters-strip" id="activeTags"></div>
+  </div>
+
+  <!-- ── 3. MAIN RESULTS CONTAINER ─────────────────────────────────────── -->
+  <main class="main-container">
+    <div class="results-bar" id="rbar">
+      <div class="results-count-text" id="rcount">Loading voters...</div>
+    </div>
+
+    <div id="content">
+      <div class="state-banner">
+        <div class="spinner-ring"></div>
+        <h2 class="state-title">Loading Electoral Roll...</h2>
+        <p class="state-desc">Preparing voter records across all 11 wards of Masalpur.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── 4. VOTER DETAIL & DIGITAL SLIP BOTTOM SHEET ───────────────────── -->
+  <div class="modal-overlay" id="overlay">
+    <div class="bottom-sheet" id="sheet">
+      <div class="sheet-handle-bar"></div>
+      <div class="sheet-content-inner" id="sheetBody">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5. QUICK WARD SELECTOR DRAWER ─────────────────────────────────── -->
+  <div class="modal-overlay" id="wardDrawerOverlay">
+    <div class="bottom-sheet" style="max-width:480px">
+      <div class="sheet-handle-bar"></div>
+      <div class="sheet-content-inner">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <h3 style="font-size:18px;font-weight:800;color:var(--text-main)">🏛️ Select Ward (वार्ड चुनें)</h3>
+          <button class="btn-sheet-close" id="btnCloseWardDrawer">✕</button>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Tap any ward to filter or jump directly:</p>
+        <div class="ward-drawer-grid" id="wardDrawerGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. FLOATING ACTION BUTTONS ────────────────────────────────────── -->
+  <div class="fab-container">
+    <button class="fab-btn" id="btnScrollTop" title="Scroll to Top" aria-label="Scroll to Top">
+      ↑
+    </button>
+  </div>
+
+  <!-- ── 7. TOAST NOTIFICATION ─────────────────────────────────────────── -->
+  <div class="toast-pill" id="toastPill">
+    <span id="toastIcon">✓</span>
+    <span id="toastMsg">Action completed!</span>
+  </div>
+
+  <!-- ━━━ JAVASCRIPT LOGIC ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <script>
+  /* ━━━ Config ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  const DATA_FILE = './voters.json';
+  const PAGE_SIZE = 40;
+
+  /* ━━━ State ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  let WARDS = [];            // [{ ward: 1, list: [...] }, ...]
+  let ALL = [];              // Flat list of all voters with injected properties
+  let query = '';
+  let filterGender = '';     // '', 'M', 'F'
+  let filterStatus = '';     // '', 'active', 'deleted', 'supp'
+  let filterWard = '';       // Selected Ward
+  let filterLoc = '';        // Locality
+  let filterAge = '';        // Selected Age Group
+  let filterRel = '';        // Selected Relation ('father', 'husband')
+  let sortBy = 'serial';     // 'serial', 'name_hi', 'age_asc', 'age_desc', 'house'
+
+  /* ━━━ String Helpers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  const esc = s => (s ?? '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const norm = s => (s ?? '').toString().toLowerCase().trim();
+
+  // Highlight search queries in text
+  function hl(text, q) {
+    if (!q || !text) return esc(text || '');
+    const safe = esc(text);
+    const pat = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return safe.replace(new RegExp(`(${pat})`, 'gi'), '<mark>$1</mark>');
+  }
+
+  // Voter search match logic (supports serial # search, hindi name, english name, house, epic)
+  function matchVoter(v, q) {
+    if (!q) return true;
+    const cleanQ = q.startsWith('#') ? q.slice(1).trim() : q;
+    return norm(v.name_hi).includes(q) ||
+           norm(v.name_en).includes(q) ||
+           norm(v.relation_name_hi).includes(q) ||
+           norm(v.locality_hi).includes(q) ||
+           norm(v.epic).includes(q) ||
+           norm(v.house_no) === cleanQ ||
+           String(v.serial) === cleanQ;
+  }
+
+  // Filter application logic (Pure dropdown filtering without chips)
+  function applyFilters(v) {
+    if (filterGender && v.gender !== filterGender) return false;
+    if (filterStatus === 'active' && v.status !== 'active') return false;
+    if (filterStatus === 'deleted' && v.status !== 'deleted') return false;
+    if (filterStatus === 'supp' && v.source !== 'supplementary') return false;
+
+    if (filterWard && String(v.ward) !== String(filterWard)) return false;
+    if (filterLoc && (v.locality_hi || '').trim() !== filterLoc) return false;
+
+    if (filterAge) {
+      const a = Number(v.age) || 0;
+      if (filterAge === '18-25' && (a < 18 || a > 25)) return false;
+      if (filterAge === '26-40' && (a < 26 || a > 40)) return false;
+      if (filterAge === '41-60' && (a < 41 || a > 60)) return false;
+      if (filterAge === '60+' && (a < 60)) return false;
+    }
+
+    if (filterRel && v.relation_type !== filterRel) return false;
+
+    return true;
+  }
+
+  function hasActiveFilters() {
+    return Boolean(query || filterGender || filterStatus || filterLoc || filterWard || filterAge || filterRel || sortBy !== 'serial');
+  }
+
+  /* ━━━ Sorting Function ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function sortVoters(list) {
+    if (sortBy === 'serial') {
+      return [...list].sort((a, b) => (a.serial || 0) - (b.serial || 0));
+    }
+    if (sortBy === 'name_hi') {
+      return [...list].sort((a, b) => (a.name_hi || '').localeCompare(b.name_hi || '', 'hi'));
+    }
+    if (sortBy === 'age_asc') {
+      return [...list].sort((a, b) => (a.age || 0) - (b.age || 0));
+    }
+    if (sortBy === 'age_desc') {
+      return [...list].sort((a, b) => (b.age || 0) - (a.age || 0));
+    }
+    if (sortBy === 'house') {
+      return [...list].sort((a, b) => String(a.house_no || '').localeCompare(String(b.house_no || ''), undefined, { numeric: true }));
+    }
+    return list;
+  }
+
+  /* ━━━ Boot Application ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  async function boot() {
+    try {
+      const res = await fetch(DATA_FILE);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      let uid = 0;
+      if (Array.isArray(data) && data[0]?.list) {
+        WARDS = data;
+        ALL = [];
+        data.forEach(w => {
+          w.list.forEach(v => {
+            v.ward = w.ward;
+            v._id = ++uid;
+            ALL.push(v);
+          });
+        });
+      } else if (Array.isArray(data)) {
+        const map = {};
+        data.forEach(v => {
+          v._id = ++uid;
+          (map[v.ward || 0] ??= []).push(v);
+        });
+        WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
+        ALL = data;
+      } else {
+        const arr = data.voters || data.data || [];
+        const map = {};
+        arr.forEach(v => {
+          v._id = ++uid;
+          (map[v.ward || 0] ??= []).push(v);
+        });
+        WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
+        ALL = arr;
+      }
+
+      buildStatsRibbon();
+      populateDropdownOptions();
+      populateWardDrawer();
+      render();
+    } catch(err) {
+      document.getElementById('content').innerHTML = `
+        <div class="state-banner">
+          <span class="state-icon-emoji">⚠️</span>
+          <h2 class="state-title">Failed to load voter data</h2>
+          <p class="state-desc">Please ensure <code>${DATA_FILE}</code> is placed in the project folder.<br/>${err.message}</p>
+        </div>`;
+    }
+  }
+
+  /* ━━━ Statistics Ribbon (Clean White Cards) ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function buildStatsRibbon() {
     const total = ALL.length;
-    rcount.innerHTML = `<b>${total.toLocaleString()}</b> मतदाता — <b>${WARDS.length}</b> वार्ड`;
+    const m = ALL.filter(v => v.gender === 'M').length;
+    const f = ALL.filter(v => v.gender === 'F').length;
+    const del = ALL.filter(v => v.status === 'deleted').length;
+    const youth = ALL.filter(v => v.age >= 18 && v.age <= 25).length;
+    const sexRatio = m > 0 ? Math.round((f / m) * 1000) : 0;
 
+    const mPct = total > 0 ? Math.round((m / total) * 100) : 0;
+    const fPct = total > 0 ? Math.round((f / total) * 100) : 0;
+
+    document.getElementById('statsScroll').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fff7ed;color:#ea580c">👥</div>
+        <div class="stat-text">
+          <span class="stat-lbl">Total Voters (कुल)</span>
+          <span class="stat-val">${total.toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#eef2ff;color:#4f46e5">👨</div>
+        <div class="stat-text">
+          <span class="stat-lbl">Male / पुरुष (${mPct}%)</span>
+          <span class="stat-val">${m.toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fdf2f8;color:#db2777">👩</div>
+        <div class="stat-text">
+          <span class="stat-lbl">Female / महिला (${fPct}%)</span>
+          <span class="stat-val">${f.toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f0fdf4;color:#16a34a">⚖️</div>
+        <div class="stat-text">
+          <span class="stat-lbl">Sex Ratio (लिंगानुपात)</span>
+          <span class="stat-val">${sexRatio}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fefce8;color:#ca8a04">🎓</div>
+        <div class="stat-text">
+          <span class="stat-lbl">Youth (18-25)</span>
+          <span class="stat-val">${youth.toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef2f2;color:#dc2626">🚫</div>
+        <div class="stat-text">
+          <span class="stat-lbl">Deleted (विलोपित)</span>
+          <span class="stat-val">${del.toLocaleString('en-IN')}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ━━━ Filter Options Population ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function populateDropdownOptions() {
+    // Ward dropdown
+    const wardSelect = document.getElementById('wardFilter');
+    const wardSet = [...new Set(ALL.map(v => v.ward).filter(Boolean))].sort((a,b)=>+a-+b);
+    let wHtml = '<option value="">🏛️ All Wards (सभी वार्ड)</option>';
+    wardSet.forEach(w => {
+      const count = ALL.filter(v => v.ward === w).length;
+      wHtml += `<option value="${w}">Ward ${w} (${count} Voters)</option>`;
+    });
+    wardSelect.innerHTML = wHtml;
+
+    // Locality dropdown
+    const locCounts = {};
+    ALL.forEach(v => {
+      const loc = (v.locality_hi || '').trim();
+      if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
+    });
+    const sortedLocs = Object.keys(locCounts).sort((a,b) => locCounts[b] - locCounts[a]);
+    let lHtml = '<option value="">📍 All Localities (सभी मोहल्ले)</option>';
+    sortedLocs.forEach(loc => {
+      lHtml += `<option value="${esc(loc)}">${esc(loc)} (${locCounts[loc]})</option>`;
+    });
+    document.getElementById('locFilter').innerHTML = lHtml;
+  }
+
+  /* ━━━ Ward Quick Drawer ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function populateWardDrawer() {
+    const grid = document.getElementById('wardDrawerGrid');
+    if (!grid) return;
     let html = '';
-    WARDS.forEach((w, wi) => {
-      const voters = w.list;
-      if (!voters.length) return;
-
-      const isOpen = true; // all open by default
+    WARDS.forEach(w => {
       html += `
-        <div class="ward-section" id="ws-${w.ward}">
-          <div class="ward-header ${isOpen?'':'collapsed'}" onclick="toggleWard(${w.ward})">
-            <div class="wh-left">
-              <div class="ward-badge">${w.ward}</div>
-              <div class="ward-info">
-                <div class="ward-label">वार्ड ${w.ward}</div>
-                <div class="ward-count">${voters.length} मतदाता</div>
+        <div class="ward-drawer-btn ${String(filterWard) === String(w.ward) ? 'active' : ''}" onclick="selectWardFromDrawer(${w.ward})">
+          <div class="ward-drawer-num">Ward ${w.ward}</div>
+          <div class="ward-drawer-count">${w.list.length} Voters</div>
+        </div>
+      `;
+    });
+    grid.innerHTML = html;
+  }
+
+  function selectWardFromDrawer(wardNum) {
+    filterWard = String(wardNum);
+    const sel = document.getElementById('wardFilter');
+    if (sel) {
+      sel.value = filterWard;
+      sel.classList.toggle('has-val', !!filterWard);
+    }
+    closeWardDrawer();
+    render();
+    showToast(`🏛️ Ward ${wardNum} selected`);
+  }
+
+  function openWardDrawer() {
+    populateWardDrawer();
+    document.getElementById('wardDrawerOverlay').classList.add('open');
+  }
+
+  function closeWardDrawer() {
+    document.getElementById('wardDrawerOverlay').classList.remove('open');
+  }
+
+  /* ━━━ Active Tags Strip ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function renderActiveTags() {
+    const wrap = document.getElementById('activeTags');
+    if (!wrap) return;
+
+    let tags = '';
+    if (filterWard) {
+      tags += `<span class="filter-tag" onclick="clearFilterField('ward')">🏛️ Ward ${filterWard} ✕</span>`;
+    }
+    if (filterGender) {
+      const gLabels = { M: '👨 Male (पुरुष)', F: '👩 Female (महिला)' };
+      tags += `<span class="filter-tag" onclick="clearFilterField('gender')">${gLabels[filterGender] || filterGender} ✕</span>`;
+    }
+    if (filterStatus) {
+      const stLabels = { active: '✅ Active (सक्रिय)', deleted: '🚫 Deleted (विलोपित)', supp: '⚡ Supplementary' };
+      tags += `<span class="filter-tag" onclick="clearFilterField('status')">${stLabels[filterStatus] || filterStatus} ✕</span>`;
+    }
+    if (filterLoc) {
+      tags += `<span class="filter-tag" onclick="clearFilterField('loc')">📍 ${esc(filterLoc)} ✕</span>`;
+    }
+    if (filterAge) {
+      const ageLabels = { '18-25':'18–25 Yrs (युवा)', '26-40':'26–40 Yrs', '41-60':'41–60 Yrs', '60+':'60+ Yrs (वरिष्ठ)' };
+      tags += `<span class="filter-tag" onclick="clearFilterField('age')">🎂 ${ageLabels[filterAge]||filterAge} ✕</span>`;
+    }
+    if (filterRel) {
+      const relLabels = { father:'Father (पिता)', husband:'Husband (पति)' };
+      tags += `<span class="filter-tag" onclick="clearFilterField('rel')">👥 ${relLabels[filterRel]||filterRel} ✕</span>`;
+    }
+    if (sortBy !== 'serial') {
+      const sortLabels = { name_hi:'Name (नाम A-Z)', age_asc:'Age (Low to High)', age_desc:'Age (High to Low)', house:'House No (मकान)' };
+      tags += `<span class="filter-tag" onclick="clearFilterField('sort')">↕️ ${sortLabels[sortBy]||sortBy} ✕</span>`;
+    }
+
+    wrap.innerHTML = tags;
+    const resetBtn = document.getElementById('resetFiltersBtn');
+    if (resetBtn) resetBtn.classList.toggle('show', hasActiveFilters());
+  }
+
+  function clearFilterField(type) {
+    if (type === 'ward') {
+      filterWard = '';
+      const el = document.getElementById('wardFilter');
+      if (el) { el.value = ''; el.classList.remove('has-val'); }
+    } else if (type === 'gender') {
+      filterGender = '';
+      const el = document.getElementById('genderFilter');
+      if (el) { el.value = ''; el.classList.remove('has-val'); }
+    } else if (type === 'status') {
+      filterStatus = '';
+      const el = document.getElementById('statusFilter');
+      if (el) { el.value = ''; el.classList.remove('has-val'); }
+    } else if (type === 'loc') {
+      filterLoc = '';
+      const el = document.getElementById('locFilter');
+      if (el) { el.value = ''; el.classList.remove('has-val'); }
+    } else if (type === 'age') {
+      filterAge = '';
+      const el = document.getElementById('ageFilter');
+      if (el) { el.value = ''; el.classList.remove('has-val'); }
+    } else if (type === 'rel') {
+      filterRel = '';
+      const el = document.getElementById('relFilter');
+      if (el) { el.value = ''; el.classList.remove('has-val'); }
+    } else if (type === 'sort') {
+      sortBy = 'serial';
+      const el = document.getElementById('sortFilter');
+      if (el) { el.value = 'serial'; el.classList.remove('has-val'); }
+    }
+    render();
+  }
+
+  function resetAllFilters() {
+    query = '';
+    document.getElementById('q').value = '';
+    document.getElementById('clrBtn').classList.remove('active');
+
+    filterGender = '';
+    const gfEl = document.getElementById('genderFilter');
+    if (gfEl) { gfEl.value = ''; gfEl.classList.remove('has-val'); }
+
+    filterStatus = '';
+    const sfEl = document.getElementById('statusFilter');
+    if (sfEl) { sfEl.value = ''; sfEl.classList.remove('has-val'); }
+
+    filterWard = '';
+    const wf = document.getElementById('wardFilter');
+    if (wf) { wf.value = ''; wf.classList.remove('has-val'); }
+
+    filterLoc = '';
+    const lf = document.getElementById('locFilter');
+    if (lf) { lf.value = ''; lf.classList.remove('has-val'); }
+
+    filterAge = '';
+    const af = document.getElementById('ageFilter');
+    if (af) { af.value = ''; af.classList.remove('has-val'); }
+
+    filterRel = '';
+    const rf = document.getElementById('relFilter');
+    if (rf) { rf.value = ''; rf.classList.remove('has-val'); }
+
+    sortBy = 'serial';
+    const sortEl = document.getElementById('sortFilter');
+    if (sortEl) { sortEl.value = 'serial'; sortEl.classList.remove('has-val'); }
+
+    render();
+    showToast('All filters have been reset');
+  }
+
+  /* ━━━ Main Render ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function render() {
+    const q = norm(query);
+    const content = document.getElementById('content');
+    const rcount = document.getElementById('rcount');
+
+    renderActiveTags();
+
+    if (hasActiveFilters()) {
+      // ── Filtered Mode ──
+      const matched = ALL.filter(v => matchVoter(v, q) && applyFilters(v));
+      const sortedHits = sortVoters(matched);
+
+      rcount.innerHTML = `Showing <span class="highlight-count">${sortedHits.length.toLocaleString('en-IN')}</span> of <strong>${ALL.length.toLocaleString('en-IN')}</strong> Voters (मतदाता)`;
+
+      if (sortedHits.length === 0) {
+        content.innerHTML = `
+          <div class="state-banner">
+            <span class="state-icon-emoji">🔍</span>
+            <h2 class="state-title">No Voters Found (कोई परिणाम नहीं)</h2>
+            <p class="state-desc">No records match the selected query or filters.</p>
+            <button class="btn-load-more" style="width:auto;display:inline-block;padding:8px 22px" onclick="resetAllFilters()">Reset Filters (रीसेट करें)</button>
+          </div>`;
+        return;
+      }
+
+      // Group by Ward for clean hierarchical presentation
+      const byWard = {};
+      sortedHits.forEach(v => { (byWard[v.ward] ??= []).push(v); });
+
+      let html = '';
+      Object.keys(byWard).sort((a,b)=>+a-+b).forEach(ward => {
+        const list = byWard[ward];
+        html += `
+          <div class="ward-section-card">
+            <div class="ward-card-header is-search-group">
+              <div class="ward-header-left">
+                <div class="ward-badge-pill">
+                  <span class="ward-badge-lbl">WARD</span>
+                  <span class="ward-badge-num">${ward}</span>
+                </div>
+                <div>
+                  <div class="ward-header-title">Ward No. ${ward} (वार्ड ${ward})</div>
+                  <div class="ward-header-meta">
+                    <span>${list.length} Voters found</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="wh-right">
-              <div class="ward-arrow">▼</div>
+            <div class="ward-card-body">
+        `;
+        list.forEach(v => { html += voterCardHTML(v, q); });
+        html += `</div></div>`;
+      });
+
+      content.innerHTML = html;
+      bindCardEvents();
+
+    } else {
+      // ── Default Ward-First Accordion Mode ──
+      const total = ALL.length;
+      rcount.innerHTML = `Total <strong>${total.toLocaleString('en-IN')}</strong> Voters (मतदाता) — <strong>${WARDS.length}</strong> Wards (वार्ड)`;
+
+      let html = '';
+      WARDS.forEach((w) => {
+        const voters = w.list;
+        if (!voters.length) return;
+
+        const isOpen = true; // Open by default
+        const slice = voters.slice(0, PAGE_SIZE);
+        const rest = voters.length - slice.length;
+
+        html += `
+          <div class="ward-section-card" id="ward-card-${w.ward}">
+            <div class="ward-card-header ${isOpen ? '' : 'collapsed'}" onclick="toggleWardAccordion(${w.ward})">
+              <div class="ward-header-left">
+                <div class="ward-badge-pill">
+                  <span class="ward-badge-lbl">WARD</span>
+                  <span class="ward-badge-num">${w.ward}</span>
+                </div>
+                <div>
+                  <div class="ward-header-title">Ward No. ${w.ward} (वार्ड ${w.ward})</div>
+                  <div class="ward-header-meta">
+                    <span>${voters.length.toLocaleString('en-IN')} Voters</span>
+                    <span>•</span>
+                    <span style="color:#64748b">Masalpur</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ward-header-right">
+                <div class="ward-chevron-circle">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="ward-card-body ${isOpen ? '' : 'hidden'}" id="ward-body-${w.ward}">
+        `;
+
+        slice.forEach(v => { html += voterCardHTML(v, ''); });
+
+        if (rest > 0) {
+          html += `
+            <div class="load-more-container" id="more-wrap-${w.ward}">
+              <button class="btn-load-more" onclick="loadMoreInWard(${w.ward})">
+                Load More (${rest} remaining) / और देखें
+              </button>
+            </div>
+          `;
+        }
+
+        html += `</div></div>`;
+      });
+
+      content.innerHTML = html || `
+        <div class="state-banner">
+          <span class="state-icon-emoji">📋</span>
+          <h2 class="state-title">No data available</h2>
+        </div>`;
+      bindCardEvents();
+    }
+  }
+
+  /* ━━━ Voter Card with Prominent Serial Number Box on List Screen ━━━ */
+  function voterCardHTML(v, q) {
+    const isMale = v.gender === 'M';
+    const gLabel = isMale ? 'Male (पुरुष)' : 'Female (महिला)';
+    const gClass = isMale ? 'male' : 'female';
+    const relLabel = v.relation_type === 'husband' ? 'Husband (पति)' : 'Father (पिता)';
+    const delClass = v.status === 'deleted' ? 'is-deleted' : '';
+    const stLabel = { active:'Active', deleted:'Deleted', modified:'Modified' }[v.status] || v.status;
+
+    return `
+      <div class="voter-card gender-${v.gender} status-${v.status}" data-id="${v._id}">
+        <div class="vc-main-layout">
+          <!-- ── Prominent Serial Number Box ── -->
+          <div class="vc-serial-box" title="मतदाता क्रमांक (Serial Number)">
+            <span class="vc-serial-lbl">क्रमांक</span>
+            <span class="vc-serial-num">#${v.serial}</span>
+          </div>
+
+          <!-- Voter Information Column -->
+          <div class="vc-details-col">
+            <div class="vc-header">
+              <div class="vc-name-wrap">
+                <div class="vc-hindi-name ${delClass}">${hl(v.name_hi, q)}</div>
+                <div class="vc-eng-name">${hl(v.name_en, q)}</div>
+              </div>
+              <div class="vc-badges">
+                <span class="gender-pill ${gClass}">
+                  ${isMale ? '👨' : '👩'} ${gLabel}
+                </span>
+                <span class="status-badge ${v.status}">${stLabel}</span>
+              </div>
+            </div>
+
+            <!-- Relation Row -->
+            <div class="vc-relation-row">
+              <span class="rel-badge">${relLabel}:</span>
+              <span class="rel-val">${hl(v.relation_name_hi, q)}</span>
+            </div>
+
+            <!-- Meta Tags -->
+            <div class="vc-meta-grid">
+              <span class="meta-tag highlight-epic" title="Voter ID (EPIC)">
+                🆔 ${hl(v.epic, q)}
+              </span>
+              <span class="meta-tag highlight-house" title="House Number">
+                🏠 House: ${esc(v.house_no) || '—'}
+              </span>
+              <span class="meta-tag" title="Age">
+                🎂 Age: ${v.age} Yrs
+              </span>
+              ${v.page_no ? `
+              <span class="meta-tag" title="Electoral Roll Page Number">
+                📄 Page ${v.page_no}
+              </span>` : ''}
+              <span class="meta-tag highlight-loc" title="Locality / Area">
+                📍 <span class="hi">${hl(v.locality_hi, q)}</span>
+              </span>
             </div>
           </div>
-          <div class="ward-body ${isOpen?'':'hidden'}" id="wb-${w.ward}">`;
+        </div>
 
-      // Paginate: show first PAGE_SIZE, rest behind "more" button
-      const slice = voters.slice(0, PAGE_SIZE);
-      const rest  = voters.length - slice.length;
-      slice.forEach(v => { html += voterCardHTML(v, ''); });
-      if (rest > 0) {
-        html += `<div class="more-wrap"><button class="more-btn" style="display:block"
-          onclick="loadMore(${w.ward})">और देखें (${rest} शेष)</button></div>`;
+        <!-- Quick Action Bar -->
+        <div class="vc-quick-actions" onclick="event.stopPropagation()">
+          <button class="vc-act-btn whatsapp" onclick="shareWhatsAppDirect(event, ${v._id})" title="Share Slip on WhatsApp">
+            🟢 WhatsApp Slip
+          </button>
+          <button class="vc-act-btn copy" onclick="copyEpicDirect(event, '${esc(v.epic)}')" title="Copy EPIC Voter ID">
+            📋 Copy EPIC
+          </button>
+          <button class="vc-act-btn family" onclick="filterBySameHouse(event, ${v.ward}, '${esc(v.house_no)}')" title="View family members in this house">
+            🏠 Family (परिवार)
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ━━━ Card Click Binding ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function bindCardEvents() {
+    document.querySelectorAll('.voter-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = +card.dataset.id;
+        const voter = ALL.find(x => x._id === id);
+        if (voter) openDetailModal(voter);
+      });
+    });
+  }
+
+  /* ━━━ Accordion Toggle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function toggleWardAccordion(ward) {
+    const hdr = document.querySelector(`#ward-card-${ward} .ward-card-header`);
+    const body = document.getElementById(`ward-body-${ward}`);
+    if (!body) return;
+    const isHidden = body.classList.contains('hidden');
+    body.classList.toggle('hidden', !isHidden);
+    hdr.classList.toggle('collapsed', !isHidden);
+  }
+
+  /* ━━━ Load More in Ward ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function loadMoreInWard(ward) {
+    const body = document.getElementById(`ward-body-${ward}`);
+    if (!body) return;
+    const w = WARDS.find(x => x.ward === ward);
+    if (!w) return;
+
+    const currentCount = body.querySelectorAll('.voter-card').length;
+    const voters = hasActiveFilters() ? w.list.filter(applyFilters) : w.list;
+    const nextBatch = voters.slice(currentCount, currentCount + PAGE_SIZE);
+    const remaining = voters.length - currentCount - nextBatch.length;
+
+    const moreWrap = document.getElementById(`more-wrap-${ward}`);
+    let frag = '';
+    nextBatch.forEach(v => { frag += voterCardHTML(v, norm(query)); });
+
+    if (moreWrap) {
+      moreWrap.insertAdjacentHTML('beforebegin', frag);
+      if (remaining > 0) {
+        moreWrap.querySelector('.btn-load-more').textContent = `Load More (${remaining} remaining) / और देखें`;
+      } else {
+        moreWrap.remove();
       }
-      html += `</div></div>`;
-    });
+    }
 
-    content.innerHTML = html || `<div class="state"><span class="state-emoji">📋</span><h3>कोई डेटा नहीं</h3></div>`;
-    bindCards();
+    bindCardEvents();
   }
-}
 
-/* ━━━ Voter card HTML ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function voterCardHTML(v, q) {
-  const relLabel = v.relation_type === 'husband' ? 'पति' : 'पिता';
-  const spClass  = `sp-${v.status||'active'}`;
-  const gClass   = `gpill-${v.gender}`;
-  const gLabel   = v.gender === 'M' ? 'पुरुष' : 'महिला';
-  const stLabel  = { active:'Active', deleted:'Deleted', modified:'Modified' }[v.status] || v.status;
-  const delClass = v.status === 'deleted' ? 'deleted' : '';
-  const statusCls = v.status !== 'active' ? `status-${v.status}` : '';
+  /* ━━━ Detail Sheet & Digital Voter Slip ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function openDetailModal(v) {
+    const isMale = v.gender === 'M';
+    const gLabel = isMale ? 'Male (पुरुष)' : 'Female (महिला)';
+    const gColor = isMale ? 'male' : 'female';
+    const relLabel = v.relation_type === 'husband' ? 'Husband (पति)' : 'Father (पिता)';
+    const relIcon = v.relation_type === 'husband' ? '💑' : '👨‍👦';
+    const stLabel = { active:'✅ Active (सक्रिय)', deleted:'🚫 Deleted (विलोपित)', modified:'⚠️ Modified (संशोधित)' }[v.status] || v.status;
 
-  return `
-    <div class="vcard ${statusCls}" data-id="${v._id}">
-      <div class="vc-top">
-        <div class="vc-names">
-          <div class="vc-name-hi ${delClass}">${hl(v.name_hi, q)}</div>
-          <div class="vc-name-en">${hl(v.name_en, q)}</div>
+    // Find family members (same ward & same house_no)
+    const familyMembers = ALL.filter(m => m.ward === v.ward && m.house_no && m.house_no === v.house_no && m._id !== v._id);
+
+    let familyHtml = '';
+    if (familyMembers.length > 0) {
+      familyHtml = `
+        <div class="family-section">
+          <div class="family-header">
+            <div class="family-title">
+              🏠 Same House Members (परिवार के सदस्य) — House No: ${esc(v.house_no)}
+            </div>
+            <span class="family-count-badge">${familyMembers.length} Members</span>
+          </div>
+          <div class="family-list">
+            ${familyMembers.map(m => `
+              <div class="family-member-item" onclick="openDetailModalById(${m._id})">
+                <div>
+                  <div class="family-item-name">${esc(m.name_hi)}</div>
+                  <div class="family-item-meta">${m.gender === 'M' ? 'Male (पुरुष)' : 'Female (महिला)'} • ${m.age} Yrs • ${m.relation_type === 'husband' ? 'Husband (पति)' : 'Father (पिता)'}: ${esc(m.relation_name_hi)}</div>
+                </div>
+                <div style="font-family:monospace;font-size:11px;font-weight:700;color:#0284c7">#${m.serial}</div>
+              </div>
+            `).join('')}
+          </div>
         </div>
-        <div class="vc-badges">
-          <span class="gpill ${gClass}">${gLabel}</span>
-          <span class="status-pill ${spClass}">${stLabel}</span>
+      `;
+    }
+
+    document.getElementById('sheetBody').innerHTML = `
+      <!-- Digital Voter Slip -->
+      <div class="voter-slip-card" id="printableSlip">
+        <div class="slip-header">
+          <div class="slip-brand">
+            <span class="slip-brand-logo">🗳️</span>
+            <div>
+              <div class="slip-brand-txt">VOTER SLIP (मतदाता पर्ची)</div>
+              <div class="slip-brand-sub">Masalpur Municipality · Ward ${v.ward}</div>
+            </div>
+          </div>
+          <button class="btn-sheet-close" onclick="closeDetailModal()">✕</button>
+        </div>
+
+        <div class="slip-voter-profile">
+          <div>
+            <div class="slip-name-hi">${esc(v.name_hi)}</div>
+            <div class="slip-name-en">${esc(v.name_en)}</div>
+          </div>
+          <div style="text-align:right">
+            <span class="gender-pill ${gColor}">${isMale ? '👨' : '👩'} ${gLabel}</span>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Serial: <strong>#${v.serial}</strong></div>
+          </div>
+        </div>
+
+        <!-- EPIC Code Banner with Copy Action -->
+        <div class="slip-epic-banner" id="sheetEpicBanner" onclick="copyEpicDirect(event, '${esc(v.epic)}')">
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;color:#0284c7;font-weight:700">Voter ID Card (EPIC) — Tap to Copy</div>
+            <div class="epic-code-display">${esc(v.epic)}</div>
+          </div>
+          <div class="epic-copy-indicator">
+            <span>📋 Copy</span>
+          </div>
+        </div>
+
+        <!-- Slip Grid Parameters -->
+        <div class="slip-grid">
+          <div class="slip-cell">
+            <div class="slip-cell-lbl">Gender (लिंग)</div>
+            <div class="slip-cell-val ${gColor}">${gLabel}</div>
+          </div>
+          <div class="slip-cell">
+            <div class="slip-cell-lbl">Age (आयु)</div>
+            <div class="slip-cell-val">${v.age} Yrs (वर्ष)</div>
+          </div>
+          <div class="slip-cell">
+            <div class="slip-cell-lbl">House No. (मकान नं.)</div>
+            <div class="slip-cell-val">${esc(v.house_no) || '—'}</div>
+          </div>
+          <div class="slip-cell">
+            <div class="slip-cell-lbl">Ward No. (वार्ड नं.)</div>
+            <div class="slip-cell-val ward">Ward ${v.ward}</div>
+          </div>
+          <div class="slip-cell">
+            <div class="slip-cell-lbl">Page No. (पृष्ठ नं.)</div>
+            <div class="slip-cell-val" style="color:#0284c7">${v.page_no ? `Page ${v.page_no}` : '—'}</div>
+          </div>
+          <div class="slip-cell">
+            <div class="slip-cell-lbl">Status (स्थिति)</div>
+            <div class="slip-cell-val" style="font-size:13px">${stLabel}</div>
+          </div>
+        </div>
+
+        <!-- Relation Row -->
+        <div class="slip-wide-cell">
+          <div class="slip-wide-icon">${relIcon}</div>
+          <div>
+            <div class="slip-wide-title">${relLabel} Name (${v.relation_type === 'husband' ? 'पति' : 'पिता'} का नाम)</div>
+            <div class="slip-wide-val">${esc(v.relation_name_hi)}</div>
+          </div>
+        </div>
+
+        <!-- Locality Row -->
+        <div class="slip-wide-cell">
+          <div class="slip-wide-icon">📍</div>
+          <div>
+            <div class="slip-wide-title">Locality / Area (मोहल्ला / क्षेत्र)</div>
+            <div class="slip-wide-val">${esc(v.locality_hi)}</div>
+          </div>
         </div>
       </div>
-      <div class="vc-meta">
-        <span class="vmeta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          ${esc(v.house_no)||'—'}
-        </span>
-        <span class="vmeta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          ${v.age} वर्ष
-        </span>
-        ${v.page_no ? `<span class="vmeta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          पृ. ${v.page_no}
-        </span>` : ''}
-        <span class="vmeta loc-tag">
-          📍 <span class="hi">${hl(v.locality_hi, q)}</span>
-        </span>
+
+      <!-- Action Buttons -->
+      <div class="sheet-action-row">
+        <button class="btn-sheet-primary whatsapp" onclick="shareWhatsAppVoter(${v._id})">
+          <span>🟢 Share on WhatsApp</span>
+        </button>
+        <button class="btn-sheet-primary print" onclick="window.print()">
+          <span>🖨️ Print Slip (प्रिंट)</span>
+        </button>
       </div>
-      <div class="vc-rel">
-        <span class="rel-lbl">${relLabel}</span>
-        <span class="rel-nm">${hl(v.relation_name_hi, q)}</span>
-      </div>
-    </div>`;
-}
 
-/* ━━━ Bind card click events ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function bindCards() {
-  document.querySelectorAll('.vcard').forEach(card => {
-    card.addEventListener('click', () => {
-      const id = +card.dataset.id;
-      const v = ALL.find(x => x._id === id);
-      if (v) openDetail(v, norm(query));
-    });
-  });
-}
+      <!-- Family Members List -->
+      ${familyHtml}
+    `;
 
-/* ━━━ Ward toggle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function toggleWard(ward) {
-  const hdr  = document.querySelector(`#ws-${ward} .ward-header`);
-  const body = document.getElementById(`wb-${ward}`);
-  if (!body) return;
-  const isOpen = !body.classList.contains('hidden');
-  body.classList.toggle('hidden', isOpen);
-  hdr.classList.toggle('collapsed', isOpen);
-}
-
-/* ━━━ Load more voters in a ward ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function loadMore(ward) {
-  const body = document.getElementById(`wb-${ward}`);
-  if (!body) return;
-  const w = WARDS.find(x => x.ward === ward);
-  if (!w) return;
-  const shown = body.querySelectorAll('.vcard').length;
-  const voters = hasActiveFilters() ? w.list.filter(applyFilters) : w.list;
-  const next   = voters.slice(shown, shown + PAGE_SIZE);
-  const rest   = voters.length - shown - next.length;
-
-  const moreWrap = body.querySelector('.more-wrap');
-  let frag = '';
-  next.forEach(v => { frag += voterCardHTML(v, norm(query)); });
-  if (moreWrap) moreWrap.insertAdjacentHTML('beforebegin', frag);
-
-  if (rest > 0) {
-    body.querySelector('.more-btn').textContent = `और देखें (${rest} शेष)`;
-  } else {
-    if (moreWrap) moreWrap.remove();
+    document.getElementById('overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
-  // bind new cards
-  body.querySelectorAll('.vcard:not([data-bound])').forEach(card => {
-    card.dataset.bound = '1';
-    card.addEventListener('click', () => {
-      const id = +card.dataset.id;
-      const v = ALL.find(x => x._id === id);
-      if (v) openDetail(v, norm(query));
-    });
+
+  function openDetailModalById(id) {
+    const voter = ALL.find(x => x._id === id);
+    if (voter) openDetailModal(voter);
+  }
+
+  function closeDetailModal() {
+    document.getElementById('overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ━━━ Actions: WhatsApp & Copy ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function formatWhatsAppText(v) {
+    const rel = v.relation_type === 'husband' ? 'Husband (पति)' : 'Father (पिता)';
+    const g = v.gender === 'M' ? 'Male (पुरुष)' : 'Female (महिला)';
+    return `🗳️ *Voter Slip — Masalpur (2026)*
+━━━━━━━━━━━━━━━━
+👤 *Name (नाम):* ${v.name_hi} (${v.name_en})
+👥 *${rel}:* ${v.relation_name_hi}
+🆔 *EPIC (Voter ID):* ${v.epic}
+🏛️ *Ward (वार्ड):* ${v.ward} | 🔢 *Serial (क्रमांक):* #${v.serial}
+🏠 *House No (म.नं.):* ${v.house_no || '—'}
+🎂 *Age (आयु):* ${v.age} Yrs | *Gender (लिंग):* ${g}
+📍 *Locality (मोहल्ला):* ${v.locality_hi}
+📄 *Electoral Roll Page:* ${v.page_no || '—'}
+━━━━━━━━━━━━━━━━
+Masalpur Municipality, Karauli (Raj.)`;
+  }
+
+  function shareWhatsAppDirect(e, id) {
+    if (e) e.stopPropagation();
+    const v = ALL.find(x => x._id === id);
+    if (!v) return;
+    const text = encodeURIComponent(formatWhatsAppText(v));
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  }
+
+  function shareWhatsAppVoter(id) {
+    const v = ALL.find(x => x._id === id);
+    if (!v) return;
+    const text = encodeURIComponent(formatWhatsAppText(v));
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  }
+
+  async function copyEpicDirect(e, epic) {
+    if (e) e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(epic);
+      showToast(`✓ EPIC ${epic} Copied!`);
+    } catch (_) {
+      showToast(`✓ EPIC ${epic}`);
+    }
+  }
+
+  function filterBySameHouse(e, ward, houseNo) {
+    if (e) e.stopPropagation();
+    if (!houseNo) {
+      showToast('House number not available');
+      return;
+    }
+    // Set ward and query
+    filterWard = String(ward);
+    const wardEl = document.getElementById('wardFilter');
+    if (wardEl) {
+      wardEl.value = filterWard;
+      wardEl.classList.add('has-val');
+    }
+    document.getElementById('q').value = houseNo;
+    query = houseNo;
+    document.getElementById('clrBtn').classList.add('active');
+    render();
+    showToast(`🏠 Ward ${ward}, House No. ${houseNo} Members`);
+  }
+
+  /* ━━━ Toast Notification Utility ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  let toastTimer;
+  function showToast(message) {
+    const pill = document.getElementById('toastPill');
+    const msg = document.getElementById('toastMsg');
+    if (!pill || !msg) return;
+    msg.textContent = message;
+    pill.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      pill.classList.remove('show');
+    }, 2400);
+  }
+
+  /* ━━━ Event Listeners ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  let searchDebounce;
+  document.getElementById('q').addEventListener('input', e => {
+    query = e.target.value;
+    document.getElementById('clrBtn').classList.toggle('active', query.length > 0);
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(render, 180);
   });
-}
 
-/* ━━━ Detail sheet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-function openDetail(v, q) {
-  const relLabel  = v.relation_type === 'husband' ? 'पति' : 'पिता';
-  const relIcon   = v.relation_type === 'husband' ? '💑' : '👨‍👦';
-  const gLabel    = v.gender === 'M' ? 'पुरुष' : 'महिला';
-  const gColor    = v.gender === 'M' ? 'blue'  : 'pink';
-  const stLabel   = { active:'✅ Active', deleted:'🚫 Deleted', modified:'⚠️ Modified' }[v.status] || v.status;
-  const stColor   = v.status === 'active' ? 'green' : v.status === 'deleted' ? '' : '';
+  document.getElementById('clrBtn').addEventListener('click', () => {
+    document.getElementById('q').value = '';
+    query = '';
+    document.getElementById('clrBtn').classList.remove('active');
+    render();
+    document.getElementById('q').focus();
+  });
 
-  document.getElementById('sheetBody').innerHTML = `
-    <div class="sh-top">
-      <div>
-        <div class="sh-name-hi">${hl(v.name_hi, q)}</div>
-        <div class="sh-name-en">${hl(v.name_en, q)}</div>
-      </div>
-      <button class="sh-close" onclick="closeDetail()">✕</button>
-    </div>
+  document.getElementById('wardFilter').addEventListener('change', e => {
+    filterWard = e.target.value;
+    e.target.classList.toggle('has-val', !!filterWard);
+    render();
+  });
 
-    <div class="epic-row" id="epicRow" onclick="copyEpic('${esc(v.epic)}')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.3"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <span class="epic-id" id="epicTxt">${esc(v.epic)}</span>
-      <span class="epic-copy">📋 Copy</span>
-    </div>
+  document.getElementById('genderFilter').addEventListener('change', e => {
+    filterGender = e.target.value;
+    e.target.classList.toggle('has-val', !!filterGender);
+    render();
+  });
 
-    <div class="dgrid">
-      <div class="ditem">
-        <div class="dlabel">लिंग / Gender</div>
-        <div class="dval ${gColor}">${gLabel}</div>
-      </div>
-      <div class="ditem">
-        <div class="dlabel">आयु / Age</div>
-        <div class="dval">${v.age} <span style="font-size:13px;color:#94a3b8;font-weight:400">वर्ष</span></div>
-      </div>
-      <div class="ditem">
-        <div class="dlabel">मकान नं.</div>
-        <div class="dval">${esc(v.house_no)||'—'}</div>
-      </div>
-      <div class="ditem">
-        <div class="dlabel">क्रमांक / Serial</div>
-        <div class="dval">#${v.serial}</div>
-      </div>
-      <div class="ditem">
-        <div class="dlabel">वार्ड / Ward</div>
-        <div class="dval" style="color:#f97316">${v.ward||'—'}</div>
-      </div>
-      <div class="ditem">
-        <div class="dlabel">PDF पृष्ठ</div>
-        <div class="dval" style="color:#0284c7">${v.page_no||'—'}</div>
-      </div>
-      <div class="ditem">
-        <div class="dlabel">Status</div>
-        <div class="dval" style="font-size:14px">${stLabel}</div>
-      </div>
-      <div class="ditem">
-        <div class="dlabel">Source</div>
-        <div class="dval" style="font-size:14px;color:#64748b">${esc(v.source)||'—'}</div>
-      </div>
-    </div>
+  document.getElementById('statusFilter').addEventListener('change', e => {
+    filterStatus = e.target.value;
+    e.target.classList.toggle('has-val', !!filterStatus);
+    render();
+  });
 
-    <div class="rel-card">
-      <div class="rel-icon">${relIcon}</div>
-      <div>
-        <div class="rel-type">${relLabel} का नाम</div>
-        <div class="rel-name-hi">${hl(v.relation_name_hi, q)}</div>
-      </div>
-    </div>
+  document.getElementById('locFilter').addEventListener('change', e => {
+    filterLoc = e.target.value;
+    e.target.classList.toggle('has-val', !!filterLoc);
+    render();
+  });
 
-    <div class="loc-row">
-      📍&nbsp;<span class="hi">${hl(v.locality_hi, q)}</span>
-    </div>
-  `;
+  document.getElementById('ageFilter').addEventListener('change', e => {
+    filterAge = e.target.value;
+    e.target.classList.toggle('has-val', !!filterAge);
+    render();
+  });
 
-  document.getElementById('overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+  document.getElementById('relFilter').addEventListener('change', e => {
+    filterRel = e.target.value;
+    e.target.classList.toggle('has-val', !!filterRel);
+    render();
+  });
 
-async function copyEpic(text) {
-  const row = document.getElementById('epicRow');
-  const txt = document.getElementById('epicTxt');
-  try {
-    await navigator.clipboard.writeText(text);
-    row.classList.add('copied');
-    txt.textContent = '✓ कॉपी हो गया!';
-    setTimeout(() => { row.classList.remove('copied'); txt.textContent = text; }, 2000);
-  } catch(_) {}
-}
+  document.getElementById('sortFilter').addEventListener('change', e => {
+    sortBy = e.target.value;
+    e.target.classList.toggle('has-val', sortBy !== 'serial');
+    render();
+  });
 
-function closeDetail() {
-  document.getElementById('overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
+  document.getElementById('resetFiltersBtn').addEventListener('click', resetAllFilters);
 
-/* ━━━ Events ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-let deb;
-document.getElementById('q').addEventListener('input', e => {
-  query = e.target.value;
-  document.getElementById('clrBtn').classList.toggle('on', query.length > 0);
-  clearTimeout(deb);
-  deb = setTimeout(render, 220);
-});
+  // Modal Closures
+  document.getElementById('overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('overlay')) closeDetailModal();
+  });
+  document.getElementById('wardDrawerOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('wardDrawerOverlay')) closeWardDrawer();
+  });
+  document.getElementById('btnWardJump').addEventListener('click', openWardDrawer);
+  document.getElementById('btnCloseWardDrawer').addEventListener('click', closeWardDrawer);
 
-document.getElementById('clrBtn').addEventListener('click', () => {
-  document.getElementById('q').value = '';
-  query = '';
-  document.getElementById('clrBtn').classList.remove('on');
-  render();
-  document.getElementById('q').focus();
-});
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeDetailModal();
+      closeWardDrawer();
+    }
+  });
 
-document.getElementById('chips').addEventListener('click', e => {
-  const btn = e.target.closest('.chip');
-  if (!btn) return;
-  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  gf = btn.dataset.f;
-  render();
-});
+  // Swipe-down to close on bottom sheet
+  let touchStartY = 0;
+  document.getElementById('sheet').addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.getElementById('sheet').addEventListener('touchend', e => {
+    if (e.changedTouches[0].clientY - touchStartY > 90) {
+      closeDetailModal();
+    }
+  }, { passive: true });
 
-document.getElementById('locFilter').addEventListener('change', e => {
-  filterLoc = e.target.value;
-  e.target.classList.toggle('has-val', !!filterLoc);
-  render();
-});
+  // Scroll to Top FAB
+  const btnScrollTop = document.getElementById('btnScrollTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 320) {
+      btnScrollTop.classList.add('visible');
+    } else {
+      btnScrollTop.classList.remove('visible');
+    }
+  }, { passive: true });
 
-document.getElementById('wardFilter').addEventListener('change', e => {
-  filterWard = e.target.value;
-  e.target.classList.toggle('has-val', !!filterWard);
-  render();
-});
+  btnScrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
-document.getElementById('ageFilter').addEventListener('change', e => {
-  filterAge = e.target.value;
-  e.target.classList.toggle('has-val', !!filterAge);
-  render();
-});
-
-document.getElementById('relFilter').addEventListener('change', e => {
-  filterRel = e.target.value;
-  e.target.classList.toggle('has-val', !!filterRel);
-  render();
-});
-
-document.getElementById('resetFiltersBtn').addEventListener('click', resetAllFilters);
-
-document.getElementById('overlay').addEventListener('click', e => {
-  if (e.target === document.getElementById('overlay')) closeDetail();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
-
-// Swipe-down to close
-let ty = 0;
-document.getElementById('sheet').addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, {passive:true});
-document.getElementById('sheet').addEventListener('touchend',   e => { if (e.changedTouches[0].clientY - ty > 80) closeDetail(); }, {passive:true});
-
-/* ━━━ Go ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-boot();
-</script>
+  /* ━━━ Start App ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  boot();
+  </script>
 </body>
 </html>
