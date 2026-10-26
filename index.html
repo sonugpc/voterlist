@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
-    /* ━━━ Design Tokens: Rounded Theme & Crisp White Palette ━━━━━━━━━ */
+    /* ━━━ Design Tokens: Mobile-Native, Rounded & Crisp White ━━━━━━━━━ */
     :root {
       --primary: #ea580c;
       --primary-dark: #c2410c;
@@ -41,31 +41,26 @@
       --danger-bg: #fee2e2;
       --danger-border: #fca5a5;
 
-      --warning: #d97706;
-      --warning-bg: #fef3c7;
-
       --surface: #ffffff;
-      --surface-subtle: #fafaf9;
       --surface-border: #e2e8f0;
-      --bg: #ffffff;
+      --bg-page: #f8fafc;
 
       --text-main: #0f172a;
       --text-muted: #64748b;
       --text-light: #94a3b8;
 
       --radius-sm: 10px;
-      --radius-md: 16px;
-      --radius-lg: 22px;
-      --radius-xl: 28px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
       --radius-full: 9999px;
 
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.03);
-      --shadow-card: 0 2px 10px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.02);
-      --shadow-card-hover: 0 8px 24px -2px rgba(234,88,12,0.1), 0 2px 8px rgba(15,23,42,0.04);
-      --shadow-sheet: 0 -12px 40px rgba(15,23,42,0.18);
+      --shadow-card: 0 2px 8px rgba(15,23,42,0.04);
+      --shadow-sheet: 0 -10px 30px rgba(15,23,42,0.18);
     }
 
-    /* ━━━ Reset & Base ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━ Reset & Strict Viewport Safety ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -73,19 +68,21 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html {
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
       scroll-behavior: smooth;
-      background: var(--bg);
+      background: var(--bg-page);
     }
 
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f8fafc;
       color: var(--text-main);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-      line-height: 1.45;
-      padding-bottom: max(32px, env(safe-area-inset-bottom, 32px));
+      line-height: 1.4;
+      padding-bottom: max(36px, env(safe-area-inset-bottom, 36px));
     }
 
     .hi {
@@ -98,9 +95,8 @@
       outline: none;
       cursor: pointer;
       background: transparent;
-      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
-
     button:active {
       transform: scale(0.96);
     }
@@ -109,60 +105,63 @@
       font-family: inherit;
     }
 
-    /* ━━━ Header: Clean White & Rounded Theme ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━ Mobile App Header (White, Zero Overflow) ━━━━━━━━━━━━━━━━━━━━ */
     .app-header {
       background: #ffffff;
-      color: var(--text-main);
-      position: relative;
-      padding: 16px 18px 14px;
-      border-bottom: 1.5px solid var(--surface-border);
-      box-shadow: 0 2px 10px rgba(15,23,42,0.03);
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--surface-border);
+      width: 100%;
     }
 
     .header-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
     }
 
     .brand-icon-box {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-md);
       background: var(--gradient-brand);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 14px var(--primary-glow);
+      font-size: 20px;
+      box-shadow: 0 3px 10px var(--primary-glow);
       flex-shrink: 0;
     }
 
     .brand-title {
       font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.2;
-      letter-spacing: -0.3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .brand-sub {
       font-size: 11px;
       color: var(--text-muted);
+      font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 2px;
-      font-weight: 600;
+      gap: 4px;
+      margin-top: 1px;
+      white-space: nowrap;
     }
 
     .badge-year {
@@ -170,234 +169,233 @@
       border: 1px solid #fed7aa;
       color: var(--primary-dark);
       font-size: 10px;
-      font-weight: 700;
-      padding: 1px 7px;
+      font-weight: 800;
+      padding: 1px 6px;
       border-radius: var(--radius-full);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    .ward-jump-btn {
+    .header-voter-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: var(--primary-light);
-      border: 1.5px solid #fed7aa;
-      color: var(--primary-dark);
-      font-size: 12px;
-      font-weight: 700;
-      padding: 7px 14px;
+      gap: 4px;
+      background: #f1f5f9;
+      border: 1px solid var(--surface-border);
+      padding: 4px 9px;
       border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
       white-space: nowrap;
-      box-shadow: 0 1px 3px rgba(234,88,12,0.1);
+      flex-shrink: 0;
     }
-    .ward-jump-btn:hover {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #ffffff;
+    .header-voter-badge strong {
+      color: var(--primary);
     }
 
-    /* ─── Stats Horizontal Carousel ─── */
+    /* ─── Compact Stats Strip (100% Mobile Safe) ─── */
     .stats-scroll {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       overflow-x: auto;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 2px;
+      padding: 4px 0 2px;
+      width: 100%;
     }
     .stats-scroll::-webkit-scrollbar { display: none; }
 
     .stat-card {
       background: #ffffff;
-      border: 1.5px solid var(--surface-border);
-      border-radius: var(--radius-md);
-      padding: 8px 13px;
-      display: flex;
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-full);
+      padding: 4px 10px;
+      display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: 6px;
       flex-shrink: 0;
-      box-shadow: var(--shadow-sm);
-    }
-    .stat-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-    .stat-text {
-      display: flex;
-      flex-direction: column;
-    }
-    .stat-lbl {
-      font-size: 10px;
+      font-size: 11px;
+      font-weight: 600;
       color: var(--text-muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
     }
-    .stat-val {
-      font-size: 15px;
-      font-weight: 800;
+    .stat-card strong {
       color: var(--text-main);
-      line-height: 1.2;
+      font-weight: 800;
+    }
+    .stat-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
     }
 
-    /* ━━━ Sticky Search & Clean Rounded Dropdowns Panel ━━━━━━━━━━━━━ */
+    /* ━━━ Sticky Mobile Search & Smart 3-Control Bar ━━━━━━━━━━━━━━━━━ */
     .sticky-control-panel {
       position: sticky;
       top: 0;
       z-index: 80;
       background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1.5px solid var(--surface-border);
-      box-shadow: 0 4px 16px -2px rgba(15,23,42,0.04);
-      padding: 12px 14px 10px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--surface-border);
+      box-shadow: 0 2px 10px rgba(15,23,42,0.03);
+      padding: 10px 14px 10px;
+      width: 100%;
     }
 
-    /* Rounded Pill Search Bar */
+    /* Full-width Rounded Search Box */
     .search-box-wrap {
       position: relative;
-      margin-bottom: 10px;
+      width: 100%;
+      margin-bottom: 8px;
     }
     .search-icon-svg {
       position: absolute;
-      left: 16px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-light);
       pointer-events: none;
-      transition: color 0.15s;
     }
     .search-input {
       width: 100%;
-      height: 48px;
-      background: #ffffff;
+      height: 44px;
+      background: #f8fafc;
       border: 1.5px solid var(--surface-border);
       border-radius: var(--radius-full);
-      padding: 0 44px 0 46px;
-      font-size: 15px;
+      padding: 0 38px 0 42px;
+      font-size: 14px;
       color: var(--text-main);
       font-family: 'Noto Sans Devanagari', 'Plus Jakarta Sans', sans-serif;
       outline: none;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: all 0.15s ease;
     }
     .search-input::placeholder {
       color: var(--text-light);
-      font-size: 14px;
+      font-size: 13px;
     }
     .search-input:focus {
       background: #ffffff;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3.5px var(--primary-glow);
-    }
-    .search-input:focus ~ .search-icon-svg {
-      color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
     }
     .search-clear-btn {
       position: absolute;
-      right: 12px;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       background: #e2e8f0;
       color: #64748b;
       border-radius: var(--radius-full);
       display: none;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-    }
-    .search-clear-btn:hover {
-      background: var(--primary);
-      color: #ffffff;
     }
     .search-clear-btn.active {
       display: flex;
     }
 
-    /* Rounded Dropdowns Row (No Chips) */
-    .filter-dropdowns-row {
-      display: flex;
-      gap: 7px;
-      align-items: center;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 2px;
+    /* ─── Compact Mobile Control Bar (Fits 100% on any mobile screen) ─── */
+    .mobile-control-bar {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1fr;
+      gap: 6px;
+      width: 100%;
     }
-    .filter-dropdowns-row::-webkit-scrollbar { display: none; }
 
-    .dropdown-pill-wrap {
+    .ctl-pill {
       position: relative;
-      display: inline-flex;
-      align-items: center;
-      flex-shrink: 0;
-    }
-    .dropdown-pill-wrap select {
-      appearance: none;
-      -webkit-appearance: none;
       background: #ffffff;
       border: 1.5px solid var(--surface-border);
       border-radius: var(--radius-full);
-      padding: 6px 28px 6px 13px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #334155;
-      font-family: 'Noto Sans Devanagari', 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%2364748b'%3E%3Cpath d='M0 0l5 5 5-5z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      max-width: 175px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-      transition: all 0.15s;
-    }
-    .dropdown-pill-wrap select:focus,
-    .dropdown-pill-wrap select:hover {
-      border-color: var(--primary);
-    }
-    .dropdown-pill-wrap select.has-val {
-      background-color: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary-dark);
-      font-weight: 700;
-    }
-
-    .btn-reset-filters {
-      display: none;
+      height: 38px;
+      display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 6px 14px;
-      background: var(--danger-bg);
-      border: 1.5px solid var(--danger-border);
-      border-radius: var(--radius-full);
-      color: var(--danger);
-      font-size: 11px;
-      font-weight: 700;
-      white-space: nowrap;
+      padding: 0 8px;
+      overflow: hidden;
+      transition: all 0.15s ease;
+    }
+    .ctl-pill:focus-within, .ctl-pill.has-val {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .ctl-pill-icon {
+      font-size: 13px;
+      margin-right: 4px;
       flex-shrink: 0;
     }
-    .btn-reset-filters.show {
+    .ctl-pill select {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 12px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' fill='%2364748b'%3E%3Cpath d='M0 0l4 4 4-4z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 2px center;
+    }
+    .ctl-pill.has-val select {
+      color: var(--primary-dark);
+    }
+
+    /* Filter Trigger Button (Opens Bottom Sheet) */
+    .btn-filter-trigger {
+      height: 38px;
+      background: #ffffff;
+      border: 1.5px solid var(--surface-border);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .btn-filter-trigger:hover, .btn-filter-trigger.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+    .filter-count-badge {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .filter-count-badge.show {
       display: inline-flex;
     }
 
-    /* Active filter badges in result bar */
-    .active-filters-strip {
+    /* Active filter tags strip */
+    .active-chips-strip {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
-      margin-top: 6px;
+      margin-top: 8px;
+      width: 100%;
     }
     .filter-tag {
       display: inline-flex;
@@ -408,21 +406,17 @@
       color: var(--primary-dark);
       font-size: 11px;
       font-weight: 700;
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: var(--radius-full);
       cursor: pointer;
     }
-    .filter-tag:hover {
-      background: var(--danger-bg);
-      border-color: var(--danger-border);
-      color: var(--danger);
-    }
 
-    /* ━━━ Main Layout ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━ Main Layout (Strict Width & Zero Overflow) ━━━━━━━━━━━━━━━━━━ */
     .main-container {
-      max-width: 760px;
+      width: 100%;
+      max-width: 680px;
       margin: 0 auto;
-      padding: 14px 12px 80px;
+      padding: 10px 12px 70px;
     }
 
     /* Result summary status bar */
@@ -430,11 +424,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      padding: 0 4px;
+      margin-bottom: 10px;
+      padding: 0 2px;
+      width: 100%;
     }
     .results-count-text {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -447,50 +442,43 @@
       font-weight: 800;
     }
 
-    /* ━━━ Ward Accordion Section (Rounded Theme) ━━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━ Ward Accordion Section (Rounded White Card) ━━━━━━━━━━━━━━━━━ */
     .ward-section-card {
       background: #ffffff;
       border-radius: var(--radius-xl);
       border: 1.5px solid var(--surface-border);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       box-shadow: var(--shadow-card);
       overflow: hidden;
-      transition: box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-    .ward-section-card:hover {
-      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-      border-color: #cbd5e1;
+      width: 100%;
     }
 
     .ward-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 18px;
+      padding: 12px 14px;
       background: #ffffff;
       cursor: pointer;
       user-select: none;
-      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-      transition: background 0.15s;
-    }
-    .ward-card-header:hover {
-      background: #fafaf9;
+      width: 100%;
     }
     .ward-card-header.is-search-group {
       cursor: default;
-      background: #ffffff;
-      border-bottom: 1.5px solid var(--surface-border);
+      border-bottom: 1px solid var(--surface-border);
     }
 
     .ward-header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
     }
     .ward-badge-pill {
-      min-width: 46px;
-      height: 46px;
-      padding: 0 10px;
+      min-width: 42px;
+      height: 42px;
+      padding: 0 8px;
       border-radius: var(--radius-md);
       background: var(--gradient-brand);
       color: #ffffff;
@@ -498,51 +486,49 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 3px 10px var(--primary-glow);
       flex-shrink: 0;
+      box-shadow: 0 2px 8px var(--primary-glow);
     }
     .ward-badge-lbl {
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       line-height: 1;
     }
     .ward-badge-num {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 900;
       line-height: 1.1;
     }
 
     .ward-header-title {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .ward-header-meta {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 1px;
       font-weight: 600;
     }
 
-    .ward-header-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
     .ward-chevron-circle {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       border-radius: var(--radius-full);
       background: #f1f5f9;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #64748b;
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s, color 0.15s;
+      flex-shrink: 0;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .ward-card-header:not(.collapsed) .ward-chevron-circle {
       transform: rotate(180deg);
@@ -551,53 +537,54 @@
     }
 
     .ward-card-body {
-      border-top: 1.5px solid var(--surface-border);
+      border-top: 1px solid var(--surface-border);
       background: #ffffff;
-      padding: 8px 6px;
+      padding: 6px 8px;
+      width: 100%;
       display: block;
     }
     .ward-card-body.hidden {
       display: none;
     }
 
-    /* ━━━ Voter Card with Prominent Serial Number Box ━━━━━━━━━━━━━━━━━ */
+    /* ━━━ Voter Card: Prominent Serial Number on Left (Zero Overflow) ━ */
     .voter-card {
-      position: relative;
-      padding: 14px 14px 12px;
+      width: 100%;
+      padding: 12px;
       border-radius: var(--radius-lg);
-      margin: 8px 4px;
+      margin: 8px 0;
       background: #ffffff;
       border: 1.5px solid #f1f5f9;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(15,23,42,0.03);
-      transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 4px rgba(15,23,42,0.03);
+      transition: all 0.15s ease;
     }
     .voter-card:hover {
       border-color: #fed7aa;
-      box-shadow: var(--shadow-card-hover);
-      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(234,88,12,0.08);
     }
     .voter-card:active {
       background: #fff7ed;
       transform: scale(0.98);
     }
-
     .voter-card.status-deleted {
       opacity: 0.65;
       background: #fffafa;
     }
 
-    /* Main layout: Serial box on left + Voter info on right */
+    /* Main Flex Layout */
     .vc-main-layout {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
+      width: 100%;
     }
 
-    /* ─── Prominent Serial Number Box on List Screen ─── */
+    /* ─── Prominent Serial Box on List Screen ─── */
     .vc-serial-box {
-      min-width: 52px;
-      height: 52px;
+      min-width: 48px;
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-md);
       background: #f8fafc;
       border: 1.5px solid #e2e8f0;
@@ -606,7 +593,6 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
       margin-top: 2px;
     }
     .voter-card.gender-M .vc-serial-box {
@@ -620,17 +606,17 @@
       color: var(--female-dark);
     }
     .vc-serial-lbl {
-      font-size: 8.5px;
+      font-size: 8px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       line-height: 1;
       opacity: 0.85;
     }
     .vc-serial-num {
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 900;
-      line-height: 1.15;
+      line-height: 1.1;
       font-family: 'Plus Jakarta Sans', monospace;
       margin-top: 1px;
     }
@@ -645,8 +631,9 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 5px;
+      gap: 6px;
+      margin-bottom: 4px;
+      width: 100%;
     }
     .vc-name-wrap {
       flex: 1;
@@ -654,7 +641,7 @@
     }
     .vc-hindi-name {
       font-family: 'Noto Sans Devanagari', sans-serif;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.3;
@@ -665,18 +652,21 @@
       color: var(--danger);
     }
     .vc-eng-name {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       margin-top: 1px;
       text-transform: capitalize;
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .vc-badges {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 4px;
+      gap: 3px;
       flex-shrink: 0;
     }
 
@@ -684,9 +674,9 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      padding: 3px 9px;
+      padding: 2px 7px;
       border-radius: var(--radius-full);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       font-family: 'Noto Sans Devanagari', sans-serif;
     }
@@ -702,12 +692,12 @@
     }
 
     .status-badge {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      padding: 2px 7px;
+      padding: 1px 6px;
       border-radius: var(--radius-full);
       text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
     }
     .status-badge.active {
       background: var(--success-bg);
@@ -726,45 +716,49 @@
     .vc-relation-row {
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-bottom: 8px;
+      gap: 5px;
+      margin-bottom: 6px;
       background: #fafaf9;
-      border-radius: var(--radius-md);
-      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      padding: 4px 8px;
       border: 1px solid #f1f5f9;
+      width: 100%;
     }
     .rel-badge {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--primary-dark);
       background: var(--primary-light);
-      padding: 2px 7px;
+      padding: 1px 6px;
       border-radius: var(--radius-full);
       flex-shrink: 0;
     }
     .rel-val {
       font-family: 'Noto Sans Devanagari', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: #334155;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    /* Key Information Badges Row */
+    /* Meta Badges Grid (Zero Overflow Wrap) */
     .vc-meta-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
-      margin-bottom: 10px;
+      gap: 4px;
+      margin-bottom: 8px;
+      width: 100%;
     }
     .meta-tag {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       background: #ffffff;
-      border: 1.5px solid var(--surface-border);
+      border: 1px solid var(--surface-border);
       border-radius: var(--radius-full);
-      padding: 3px 10px;
+      padding: 2px 8px;
       font-size: 11px;
       color: #475569;
       font-weight: 700;
@@ -774,7 +768,6 @@
       border-color: #bae6fd;
       color: #0369a1;
       font-family: monospace;
-      font-size: 12px;
       font-weight: 800;
     }
     .meta-tag.highlight-house {
@@ -782,47 +775,35 @@
       border-color: #fef08a;
       color: #854d0e;
     }
-    .meta-tag.highlight-loc {
-      background: #f8fafc;
-      color: #475569;
-    }
 
-    /* ─── Voter Card Quick Action Bar (Rounded Pill Buttons) ─── */
+    /* ─── Voter Card Quick Action Bar (3-Column Mobile Grid) ─── */
     .vc-quick-actions {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding-top: 8px;
       border-top: 1px dashed #e2e8f0;
+      width: 100%;
     }
     .vc-act-btn {
-      flex: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
-      padding: 7px 12px;
+      gap: 4px;
+      height: 32px;
       border-radius: var(--radius-full);
       font-size: 11px;
       font-weight: 700;
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
       background: #ffffff;
       border: 1.5px solid var(--surface-border);
       color: #475569;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-      transition: all 0.15s ease;
-    }
-    .vc-act-btn:hover {
-      background: #ffffff;
-      border-color: #cbd5e1;
+      white-space: nowrap;
+      padding: 0 4px;
     }
     .vc-act-btn.whatsapp {
       color: #15803d;
       background: #f0fdf4;
       border-color: #bbf7d0;
-    }
-    .vc-act-btn.whatsapp:hover {
-      background: #dcfce7;
     }
     .vc-act-btn.copy {
       color: #0369a1;
@@ -840,18 +821,19 @@
       background: rgba(234, 88, 12, 0.2);
       color: var(--primary-dark);
       font-weight: 700;
-      border-radius: 3px;
+      border-radius: 2px;
       padding: 0 2px;
     }
 
     /* ━━━ Load More Button ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     .load-more-container {
       text-align: center;
-      padding: 12px 14px 6px;
+      padding: 10px 10px 4px;
+      width: 100%;
     }
     .btn-load-more {
       width: 100%;
-      padding: 11px 18px;
+      height: 42px;
       background: #ffffff;
       border: 1.5px solid var(--surface-border);
       border-radius: var(--radius-full);
@@ -860,53 +842,48 @@
       color: var(--text-main);
       box-shadow: var(--shadow-sm);
     }
-    .btn-load-more:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
 
     /* ━━━ Empty & Loading States ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     .state-banner {
       background: #ffffff;
       border-radius: var(--radius-xl);
       border: 1.5px solid var(--surface-border);
-      padding: 48px 24px;
+      padding: 40px 18px;
       text-align: center;
+      width: 100%;
       box-shadow: var(--shadow-sm);
     }
     .state-icon-emoji {
-      font-size: 44px;
-      margin-bottom: 12px;
+      font-size: 40px;
+      margin-bottom: 10px;
       display: inline-block;
     }
     .state-title {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
     .state-desc {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
-      line-height: 1.6;
-      max-width: 380px;
-      margin: 0 auto 16px;
+      line-height: 1.5;
+      margin-bottom: 14px;
     }
     .spinner-ring {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border: 3.5px solid #e2e8f0;
       border-top-color: var(--primary);
       border-radius: 50%;
-      animation: spinAnim 0.75s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-      margin: 0 auto 16px;
+      animation: spinAnim 0.75s infinite linear;
+      margin: 0 auto 14px;
     }
     @keyframes spinAnim {
       to { transform: rotate(360deg); }
     }
 
-    /* ━━━ Bottom Sheet Detail Modal (Rounded Theme) ━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━ Bottom Sheet Detail Modal ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -929,28 +906,28 @@
       background: #ffffff;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
       width: 100%;
-      max-width: 640px;
-      max-height: 92vh;
+      max-width: 600px;
+      max-height: 90vh;
       overflow-y: auto;
       transform: translateY(100%);
       transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
       box-shadow: var(--shadow-sheet);
-      padding-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+      padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
     }
     .modal-overlay.open .bottom-sheet {
       transform: translateY(0);
     }
 
     .sheet-handle-bar {
-      width: 44px;
-      height: 5px;
+      width: 40px;
+      height: 4px;
       background: #cbd5e1;
       border-radius: var(--radius-full);
-      margin: 12px auto 4px;
+      margin: 10px auto 4px;
     }
 
     .sheet-content-inner {
-      padding: 16px 20px 24px;
+      padding: 14px 16px 20px;
     }
 
     /* Digital Voter Slip Styling */
@@ -958,21 +935,18 @@
       background: #ffffff;
       border: 2px solid var(--surface-border);
       border-radius: var(--radius-lg);
-      padding: 18px;
-      margin-bottom: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
       position: relative;
       overflow: hidden;
-      box-shadow: var(--shadow-sm);
     }
-
-    /* Tricolor Top Stripe */
     .voter-slip-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 5px;
+      height: 4px;
       background: linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%);
     }
 
@@ -981,64 +955,59 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px dashed #cbd5e1;
-      padding-bottom: 12px;
-      margin-bottom: 14px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
     }
     .slip-brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .slip-brand-logo {
-      font-size: 26px;
+      font-size: 22px;
     }
     .slip-brand-txt {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.2;
     }
     .slip-brand-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
       font-weight: 600;
     }
     .btn-sheet-close {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       border-radius: var(--radius-full);
       background: #f1f5f9;
       color: #64748b;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-    }
-    .btn-sheet-close:hover {
-      background: var(--danger-bg);
-      color: var(--danger);
     }
 
     .slip-voter-profile {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
     .slip-name-hi {
       font-family: 'Noto Sans Devanagari', sans-serif;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 900;
       color: var(--text-main);
       line-height: 1.2;
     }
     .slip-name-en {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 2px;
       text-transform: capitalize;
       font-weight: 600;
     }
@@ -1047,143 +1016,124 @@
       background: #f0f9ff;
       border: 1.5px solid #bae6fd;
       border-radius: var(--radius-md);
-      padding: 12px 14px;
+      padding: 10px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .slip-epic-banner:hover {
-      background: #e0f2fe;
-    }
-    .slip-epic-banner.copied {
-      background: #f0fdf4;
-      border-color: #86efac;
     }
     .epic-code-display {
       font-family: monospace;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       color: #0369a1;
       letter-spacing: 0.5px;
     }
-    .slip-epic-banner.copied .epic-code-display {
-      color: var(--success);
-    }
     .epic-copy-indicator {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: #0284c7;
     }
 
-    /* Detail Parameters Grid */
+    /* Detail Grid (2-columns on mobile) */
     .slip-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 6px;
+      margin-bottom: 12px;
     }
     .slip-cell {
       background: #f8fafc;
-      border: 1.5px solid var(--surface-border);
+      border: 1px solid var(--surface-border);
       border-radius: var(--radius-md);
-      padding: 10px 12px;
+      padding: 8px 10px;
     }
     .slip-cell-lbl {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       color: var(--text-light);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 3px;
+      letter-spacing: 0.4px;
+      margin-bottom: 2px;
     }
     .slip-cell-val {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
     }
     .slip-cell-val.male { color: var(--male); }
     .slip-cell-val.female { color: var(--female); }
     .slip-cell-val.ward { color: var(--primary); }
 
-    /* Relation & Locality in Sheet */
     .slip-wide-cell {
       background: #f8fafc;
-      border: 1.5px solid var(--surface-border);
+      border: 1px solid var(--surface-border);
       border-radius: var(--radius-md);
-      padding: 11px 14px;
-      margin-bottom: 10px;
+      padding: 9px 12px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .slip-wide-icon {
-      font-size: 22px;
+      font-size: 20px;
       flex-shrink: 0;
     }
     .slip-wide-title {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
     }
     .slip-wide-val {
       font-family: 'Noto Sans Devanagari', sans-serif;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-main);
     }
 
-    /* Sheet Primary Action Buttons (Pill Rounded) */
     .sheet-action-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 8px;
+      margin-bottom: 16px;
     }
     .btn-sheet-primary {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 12px 14px;
+      gap: 6px;
+      height: 44px;
       border-radius: var(--radius-full);
       font-size: 13px;
       font-weight: 800;
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
       color: #ffffff;
     }
     .btn-sheet-primary.whatsapp {
       background: #16a34a;
-      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
     }
     .btn-sheet-primary.print {
       background: #0284c7;
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
     }
 
-    /* ─── Same House Members Section (Family Finder) ─── */
+    /* Family Section inside Sheet */
     .family-section {
       background: #f8fafc;
       border: 1.5px solid var(--surface-border);
       border-radius: var(--radius-lg);
-      padding: 16px;
+      padding: 14px;
     }
     .family-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .family-title {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
@@ -1191,14 +1141,13 @@
       gap: 6px;
     }
     .family-count-badge {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       background: #fed7aa;
       color: #9a3412;
-      padding: 3px 9px;
+      padding: 2px 7px;
       border-radius: var(--radius-full);
     }
-
     .family-list {
       display: flex;
       flex-direction: column;
@@ -1206,124 +1155,159 @@
     }
     .family-member-item {
       background: #ffffff;
-      border: 1.5px solid var(--surface-border);
+      border: 1px solid var(--surface-border);
       border-radius: var(--radius-md);
-      padding: 9px 12px;
+      padding: 8px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .family-member-item:hover {
-      border-color: var(--primary);
-      background: #fff7ed;
-      transform: translateX(2px);
     }
     .family-item-name {
       font-family: 'Noto Sans Devanagari', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--text-main);
     }
     .family-item-meta {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
       margin-top: 1px;
       font-weight: 600;
     }
 
-    /* ━━━ Ward Jump Drawer Grid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-    .ward-drawer-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding: 16px 0;
+    /* ━━━ Dedicated Filter Drawer Modal (Clean Segmented Controls) ━━━ */
+    .filter-drawer-body {
+      padding: 16px 16px 20px;
     }
-    .ward-drawer-btn {
+    .filter-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 14px 0 6px;
+    }
+    .filter-section-title:first-child {
+      margin-top: 0;
+    }
+
+    /* Segmented Button Groups (100% Mobile Friendly) */
+    .segment-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      width: 100%;
+    }
+    .segment-btn {
+      padding: 7px 13px;
+      border-radius: var(--radius-full);
+      background: #f8fafc;
+      border: 1.5px solid var(--surface-border);
+      color: #475569;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .segment-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    /* Locality Select in Drawer */
+    .drawer-select {
+      width: 100%;
+      height: 42px;
       background: #ffffff;
       border: 1.5px solid var(--surface-border);
       border-radius: var(--radius-md);
-      padding: 12px 8px;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.15s ease;
-    }
-    .ward-drawer-btn:hover {
-      border-color: var(--primary);
-      background: #fff7ed;
-    }
-    .ward-drawer-btn.active {
-      background: var(--gradient-brand);
-      border-color: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 4px 12px var(--primary-glow);
-    }
-    .ward-drawer-btn.active .ward-drawer-count {
-      color: rgba(255,255,255,0.85);
-    }
-    .ward-drawer-num {
-      font-size: 17px;
-      font-weight: 900;
-      line-height: 1.2;
-    }
-    .ward-drawer-count {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
+      padding: 0 12px;
+      font-size: 13px;
       font-weight: 600;
+      color: var(--text-main);
+      outline: none;
+    }
+    .drawer-select:focus {
+      border-color: var(--primary);
+    }
+
+    .filter-drawer-actions {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 8px;
+      margin-top: 22px;
+      padding-top: 14px;
+      border-top: 1px solid var(--surface-border);
+    }
+    .btn-drawer-reset {
+      height: 44px;
+      background: var(--danger-bg);
+      border: 1.5px solid var(--danger-border);
+      color: var(--danger);
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+    }
+    .btn-drawer-apply {
+      height: 44px;
+      background: var(--primary);
+      border: 1.5px solid var(--primary);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: var(--radius-full);
+      box-shadow: 0 3px 10px var(--primary-glow);
     }
 
     /* ━━━ Floating Action Buttons (FAB) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     .fab-container {
       position: fixed;
-      bottom: max(20px, env(safe-area-inset-bottom, 20px));
-      right: 16px;
+      bottom: max(16px, env(safe-area-inset-bottom, 16px));
+      right: 14px;
       z-index: 70;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
     .fab-btn {
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-full);
       background: #0f172a;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 14px rgba(15,23,42,0.2);
+      box-shadow: 0 4px 14px rgba(15,23,42,0.25);
       font-size: 18px;
       border: 1px solid rgba(255,255,255,0.15);
-      transition: all 0.2s ease;
       opacity: 0;
       pointer-events: none;
       transform: translateY(10px);
+      transition: all 0.2s ease;
     }
     .fab-btn.visible {
       opacity: 1;
       pointer-events: auto;
       transform: translateY(0);
     }
-    .fab-btn:active {
-      transform: scale(0.92);
-    }
 
     /* ━━━ Toast Notification ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     .toast-pill {
       position: fixed;
-      bottom: max(30px, env(safe-area-inset-bottom, 30px));
+      bottom: max(24px, env(safe-area-inset-bottom, 24px));
       left: 50%;
       transform: translateX(-50%) translateY(30px);
       background: #0f172a;
       color: #ffffff;
-      padding: 10px 22px;
+      padding: 9px 18px;
       border-radius: var(--radius-full);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
       box-shadow: 0 6px 20px rgba(15,23,42,0.25);
       z-index: 2000;
       opacity: 0;
@@ -1331,7 +1315,7 @@
       transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       white-space: nowrap;
       border: 1px solid rgba(255,255,255,0.15);
     }
@@ -1367,38 +1351,38 @@
 </head>
 <body>
 
-  <!-- ── 1. CLEAN WHITE HEADER & APP BAR ───────────────────────────────── -->
+  <!-- ── 1. CLEAN MOBILE HEADER (WHITE, NO OVERFLOW) ────────────────────── -->
   <header class="app-header">
     <div class="header-top">
       <div class="brand-group">
         <div class="brand-icon-box">🗳️</div>
         <div>
-          <h1 class="brand-title">Voter List · Masalpur <span style="font-size:15px;font-weight:600;opacity:0.8">(मतदाता सूची)</span></h1>
+          <h1 class="brand-title">Voter List · Masalpur</h1>
           <div class="brand-sub">
-            <span>Masalpur Municipality · Karauli (Raj.)</span>
+            <span>Municipality Masalpur</span>
             <span class="badge-year">2026</span>
           </div>
         </div>
       </div>
-      <button class="ward-jump-btn" id="btnWardJump" title="Jump directly to any ward">
-        <span>🏛️ Select Ward (वार्ड)</span>
-      </button>
+      <div class="header-voter-badge" id="headerVoterBadge">
+        Total: <strong id="headerTotalNum">...</strong>
+      </div>
     </div>
 
-    <!-- Quick Stats Ribbon (White Cards) -->
+    <!-- Compact Stats Strip (100% Horizontal Safe) -->
     <div class="stats-scroll" id="statsScroll">
       <div class="stat-card">
-        <div class="spinner-ring" style="width:16px;height:16px;border-width:2.5px;margin:0"></div>
-        <span style="font-size:12px;color:#94a3b8">Loading...</span>
+        <span class="stat-dot" style="background:#ea580c"></span>
+        Loading stats...
       </div>
     </div>
   </header>
 
-  <!-- ── 2. STICKY SEARCH & ROUNDED DROPDOWNS PANEL (NO CHIPS) ────────── -->
+  <!-- ── 2. STICKY MOBILE CONTROLS (NO OVERFLOWING DROPDOWNS) ──────────── -->
   <div class="sticky-control-panel">
-    <!-- Rounded Pill Search Bar -->
+    <!-- Search Bar: Full-width Rounded Pill -->
     <div class="search-box-wrap">
-      <svg class="search-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="search-icon-svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
@@ -1406,7 +1390,7 @@
         type="search"
         id="q"
         class="search-input"
-        placeholder="Search: Name (रमेश/Ramesh), Serial #, House, EPIC..."
+        placeholder="Search: Name (रमेश), Serial #, House, EPIC..."
         autocomplete="off"
         autocorrect="off"
         spellcheck="false"
@@ -1414,73 +1398,41 @@
       <button class="search-clear-btn" id="clrBtn" aria-label="Clear Search">✕</button>
     </div>
 
-    <!-- Rounded Filter Dropdowns Row (No Chips) -->
-    <div class="filter-dropdowns-row">
-      <div class="dropdown-pill-wrap">
+    <!-- Compact 3-Item Control Row: Exactly fits mobile screen width -->
+    <div class="mobile-control-bar">
+      <!-- 1. Ward Quick Switcher Pill -->
+      <div class="ctl-pill" id="wardPillWrap">
+        <span class="ctl-pill-icon">🏛️</span>
         <select id="wardFilter" title="Select Ward">
-          <option value="">🏛️ All Wards (सभी वार्ड)</option>
+          <option value="">All Wards (सभी)</option>
         </select>
       </div>
 
-      <div class="dropdown-pill-wrap">
-        <select id="genderFilter" title="Filter by Gender">
-          <option value="">👥 All Genders (सभी लिंग)</option>
-          <option value="M">👨 Male (पुरुष)</option>
-          <option value="F">👩 Female (महिला)</option>
-        </select>
-      </div>
-
-      <div class="dropdown-pill-wrap">
-        <select id="statusFilter" title="Filter by Status">
-          <option value="">⚡ All Status (सभी स्थिति)</option>
-          <option value="active">✅ Active (सक्रिय)</option>
-          <option value="deleted">🚫 Deleted (विलोपित)</option>
-          <option value="supp">⚡ Supplementary (परिशिष्ट)</option>
-        </select>
-      </div>
-
-      <div class="dropdown-pill-wrap">
-        <select id="locFilter" title="Select Locality">
-          <option value="">📍 All Localities (सभी मोहल्ले)</option>
-        </select>
-      </div>
-
-      <div class="dropdown-pill-wrap">
-        <select id="ageFilter" title="Age Group">
-          <option value="">🎂 All Ages (सभी आयु)</option>
-          <option value="18-25">18–25 Yrs (युवा)</option>
-          <option value="26-40">26–40 Yrs</option>
-          <option value="41-60">41–60 Yrs</option>
-          <option value="60+">60+ Yrs (वरिष्ठ)</option>
-        </select>
-      </div>
-
-      <div class="dropdown-pill-wrap">
-        <select id="relFilter" title="Relation">
-          <option value="">👥 All Relations (सभी संबंध)</option>
-          <option value="father">Father (पिता)</option>
-          <option value="husband">Husband (पति)</option>
-        </select>
-      </div>
-
-      <div class="dropdown-pill-wrap">
+      <!-- 2. Sort Quick Switcher Pill -->
+      <div class="ctl-pill" id="sortPillWrap">
+        <span class="ctl-pill-icon">↕️</span>
         <select id="sortFilter" title="Sort Order">
-          <option value="serial">↕️ Sort: Serial # (क्रमांक)</option>
-          <option value="name_hi">↕️ Sort: Name (A-Z / नाम)</option>
-          <option value="age_asc">↕️ Sort: Age (Low to High)</option>
-          <option value="age_desc">↕️ Sort: Age (High to Low)</option>
-          <option value="house">↕️ Sort: House No (मकान)</option>
+          <option value="serial">Serial #</option>
+          <option value="name_hi">Name (A-Z)</option>
+          <option value="age_asc">Age (Low)</option>
+          <option value="age_desc">Age (High)</option>
+          <option value="house">House No</option>
         </select>
       </div>
 
-      <button class="btn-reset-filters" id="resetFiltersBtn" title="Reset all filters">✕ Reset (रीसेट)</button>
+      <!-- 3. All Filters Bottom Sheet Trigger Button -->
+      <button class="btn-filter-trigger" id="btnOpenFilterSheet">
+        <span>⚙️</span>
+        <span>Filters</span>
+        <span class="filter-count-badge" id="activeFilterBadge">0</span>
+      </button>
     </div>
 
     <!-- Active filter tags strip -->
-    <div class="active-filters-strip" id="activeTags"></div>
+    <div class="active-chips-strip" id="activeTags"></div>
   </div>
 
-  <!-- ── 3. MAIN RESULTS CONTAINER ─────────────────────────────────────── -->
+  <!-- ── 3. MAIN RESULTS CONTAINER (FLUSH, NO HORIZONTAL OVERFLOW) ──────── -->
   <main class="main-container">
     <div class="results-bar" id="rbar">
       <div class="results-count-text" id="rcount">Loading voters...</div>
@@ -1505,17 +1457,66 @@
     </div>
   </div>
 
-  <!-- ── 5. QUICK WARD SELECTOR DRAWER ─────────────────────────────────── -->
-  <div class="modal-overlay" id="wardDrawerOverlay">
-    <div class="bottom-sheet" style="max-width:480px">
+  <!-- ── 5. MOBILE FILTER BOTTOM SHEET (CLEAN & THUMB-FRIENDLY) ────────── -->
+  <div class="modal-overlay" id="filterSheetOverlay">
+    <div class="bottom-sheet" style="max-height:85vh">
       <div class="sheet-handle-bar"></div>
       <div class="sheet-content-inner">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <h3 style="font-size:18px;font-weight:800;color:var(--text-main)">🏛️ Select Ward (वार्ड चुनें)</h3>
-          <button class="btn-sheet-close" id="btnCloseWardDrawer">✕</button>
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--surface-border);padding-bottom:10px;margin-bottom:12px;">
+          <h3 style="font-size:16px;font-weight:800;color:var(--text-main);display:flex;align-items:center;gap:6px">
+            <span>⚙️</span> Filter Voters (फ़िल्टर)
+          </h3>
+          <button class="btn-sheet-close" id="btnCloseFilterSheet">✕</button>
         </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Tap any ward to filter or jump directly:</p>
-        <div class="ward-drawer-grid" id="wardDrawerGrid"></div>
+
+        <div class="filter-drawer-body">
+          <!-- Gender Filter -->
+          <div class="filter-section-title">Gender (लिंग)</div>
+          <div class="segment-grid" id="drawerGenderGrid">
+            <button class="segment-btn active" data-val="">All (सभी)</button>
+            <button class="segment-btn" data-val="M">👨 Male (पुरुष)</button>
+            <button class="segment-btn" data-val="F">👩 Female (महिला)</button>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="filter-section-title">Status (स्थिति)</div>
+          <div class="segment-grid" id="drawerStatusGrid">
+            <button class="segment-btn active" data-val="">All (सभी)</button>
+            <button class="segment-btn" data-val="active">✅ Active (सक्रिय)</button>
+            <button class="segment-btn" data-val="deleted">🚫 Deleted (विलोपित)</button>
+            <button class="segment-btn" data-val="supp">⚡ Supplementary (परिशिष्ट)</button>
+          </div>
+
+          <!-- Age Filter -->
+          <div class="filter-section-title">Age Group (आयु वर्ग)</div>
+          <div class="segment-grid" id="drawerAgeGrid">
+            <button class="segment-btn active" data-val="">All (सभी)</button>
+            <button class="segment-btn" data-val="18-25">18–25 (Youth)</button>
+            <button class="segment-btn" data-val="26-40">26–40</button>
+            <button class="segment-btn" data-val="41-60">41–60</button>
+            <button class="segment-btn" data-val="60+">60+ (Senior)</button>
+          </div>
+
+          <!-- Relation Filter -->
+          <div class="filter-section-title">Relation (संबंध)</div>
+          <div class="segment-grid" id="drawerRelGrid">
+            <button class="segment-btn active" data-val="">All (सभी)</button>
+            <button class="segment-btn" data-val="father">Father (पिता)</button>
+            <button class="segment-btn" data-val="husband">Husband (पति)</button>
+          </div>
+
+          <!-- Locality Dropdown -->
+          <div class="filter-section-title">Locality / Area (मोहल्ला)</div>
+          <select id="drawerLocSelect" class="drawer-select">
+            <option value="">All Localities (सभी मोहल्ले)</option>
+          </select>
+
+          <!-- Drawer Action Buttons -->
+          <div class="filter-drawer-actions">
+            <button class="btn-drawer-reset" id="btnDrawerReset">✕ Reset All</button>
+            <button class="btn-drawer-apply" id="btnDrawerApply">Apply Filters ✓</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1576,7 +1577,7 @@
            String(v.serial) === cleanQ;
   }
 
-  // Filter application logic (Pure dropdown filtering without chips)
+  // Filter application logic
   function applyFilters(v) {
     if (filterGender && v.gender !== filterGender) return false;
     if (filterStatus === 'active' && v.status !== 'active') return false;
@@ -1599,8 +1600,18 @@
     return true;
   }
 
+  function getActiveFilterCount() {
+    let count = 0;
+    if (filterGender) count++;
+    if (filterStatus) count++;
+    if (filterLoc) count++;
+    if (filterAge) count++;
+    if (filterRel) count++;
+    return count;
+  }
+
   function hasActiveFilters() {
-    return Boolean(query || filterGender || filterStatus || filterLoc || filterWard || filterAge || filterRel || sortBy !== 'serial');
+    return Boolean(query || filterWard || getActiveFilterCount() > 0 || sortBy !== 'serial');
   }
 
   /* ━━━ Sorting Function ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -1660,9 +1671,9 @@
         ALL = arr;
       }
 
+      document.getElementById('headerTotalNum').textContent = ALL.length.toLocaleString('en-IN');
       buildStatsRibbon();
       populateDropdownOptions();
-      populateWardDrawer();
       render();
     } catch(err) {
       document.getElementById('content').innerHTML = `
@@ -1674,7 +1685,7 @@
     }
   }
 
-  /* ━━━ Statistics Ribbon (Clean White Cards) ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  /* ━━━ Statistics Ribbon (Compact, 100% Horizontal Safe) ━━━━━━━━━━━━━ */
   function buildStatsRibbon() {
     const total = ALL.length;
     const m = ALL.filter(v => v.gender === 'M').length;
@@ -1688,120 +1699,74 @@
 
     document.getElementById('statsScroll').innerHTML = `
       <div class="stat-card">
-        <div class="stat-icon" style="background:#fff7ed;color:#ea580c">👥</div>
-        <div class="stat-text">
-          <span class="stat-lbl">Total Voters (कुल)</span>
-          <span class="stat-val">${total.toLocaleString('en-IN')}</span>
-        </div>
+        <span class="stat-dot" style="background:#ea580c"></span>
+        Total: <strong>${total.toLocaleString('en-IN')}</strong>
       </div>
-
       <div class="stat-card">
-        <div class="stat-icon" style="background:#eef2ff;color:#4f46e5">👨</div>
-        <div class="stat-text">
-          <span class="stat-lbl">Male / पुरुष (${mPct}%)</span>
-          <span class="stat-val">${m.toLocaleString('en-IN')}</span>
-        </div>
+        <span class="stat-dot" style="background:#4f46e5"></span>
+        Male: <strong>${m.toLocaleString('en-IN')} (${mPct}%)</strong>
       </div>
-
       <div class="stat-card">
-        <div class="stat-icon" style="background:#fdf2f8;color:#db2777">👩</div>
-        <div class="stat-text">
-          <span class="stat-lbl">Female / महिला (${fPct}%)</span>
-          <span class="stat-val">${f.toLocaleString('en-IN')}</span>
-        </div>
+        <span class="stat-dot" style="background:#db2777"></span>
+        Female: <strong>${f.toLocaleString('en-IN')} (${fPct}%)</strong>
       </div>
-
       <div class="stat-card">
-        <div class="stat-icon" style="background:#f0fdf4;color:#16a34a">⚖️</div>
-        <div class="stat-text">
-          <span class="stat-lbl">Sex Ratio (लिंगानुपात)</span>
-          <span class="stat-val">${sexRatio}</span>
-        </div>
+        <span class="stat-dot" style="background:#16a34a"></span>
+        Sex Ratio: <strong>${sexRatio}</strong>
       </div>
-
       <div class="stat-card">
-        <div class="stat-icon" style="background:#fefce8;color:#ca8a04">🎓</div>
-        <div class="stat-text">
-          <span class="stat-lbl">Youth (18-25)</span>
-          <span class="stat-val">${youth.toLocaleString('en-IN')}</span>
-        </div>
+        <span class="stat-dot" style="background:#eab308"></span>
+        Youth (18-25): <strong>${youth.toLocaleString('en-IN')}</strong>
       </div>
-
       <div class="stat-card">
-        <div class="stat-icon" style="background:#fef2f2;color:#dc2626">🚫</div>
-        <div class="stat-text">
-          <span class="stat-lbl">Deleted (विलोपित)</span>
-          <span class="stat-val">${del.toLocaleString('en-IN')}</span>
-        </div>
+        <span class="stat-dot" style="background:#dc2626"></span>
+        Deleted: <strong>${del.toLocaleString('en-IN')}</strong>
       </div>
     `;
   }
 
-  /* ━━━ Filter Options Population ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  /* ━━━ Populate Dropdowns ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function populateDropdownOptions() {
-    // Ward dropdown
+    // Ward dropdown in sticky bar
     const wardSelect = document.getElementById('wardFilter');
     const wardSet = [...new Set(ALL.map(v => v.ward).filter(Boolean))].sort((a,b)=>+a-+b);
-    let wHtml = '<option value="">🏛️ All Wards (सभी वार्ड)</option>';
+    let wHtml = '<option value="">All Wards (सभी)</option>';
     wardSet.forEach(w => {
       const count = ALL.filter(v => v.ward === w).length;
-      wHtml += `<option value="${w}">Ward ${w} (${count} Voters)</option>`;
+      wHtml += `<option value="${w}">Ward ${w} (${count})</option>`;
     });
     wardSelect.innerHTML = wHtml;
 
-    // Locality dropdown
+    // Locality dropdown in filter drawer
     const locCounts = {};
     ALL.forEach(v => {
       const loc = (v.locality_hi || '').trim();
       if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
     });
     const sortedLocs = Object.keys(locCounts).sort((a,b) => locCounts[b] - locCounts[a]);
-    let lHtml = '<option value="">📍 All Localities (सभी मोहल्ले)</option>';
+    let lHtml = '<option value="">All Localities (सभी मोहल्ले)</option>';
     sortedLocs.forEach(loc => {
       lHtml += `<option value="${esc(loc)}">${esc(loc)} (${locCounts[loc]})</option>`;
     });
-    document.getElementById('locFilter').innerHTML = lHtml;
+    document.getElementById('drawerLocSelect').innerHTML = lHtml;
   }
 
-  /* ━━━ Ward Quick Drawer ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  function populateWardDrawer() {
-    const grid = document.getElementById('wardDrawerGrid');
-    if (!grid) return;
-    let html = '';
-    WARDS.forEach(w => {
-      html += `
-        <div class="ward-drawer-btn ${String(filterWard) === String(w.ward) ? 'active' : ''}" onclick="selectWardFromDrawer(${w.ward})">
-          <div class="ward-drawer-num">Ward ${w.ward}</div>
-          <div class="ward-drawer-count">${w.list.length} Voters</div>
-        </div>
-      `;
-    });
-    grid.innerHTML = html;
-  }
+  /* ━━━ Active Tags & Filter Badge ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function updateFilterUI() {
+    const filterBadge = document.getElementById('activeFilterBadge');
+    const filterTriggerBtn = document.getElementById('btnOpenFilterSheet');
+    const filterCount = getActiveFilterCount();
 
-  function selectWardFromDrawer(wardNum) {
-    filterWard = String(wardNum);
-    const sel = document.getElementById('wardFilter');
-    if (sel) {
-      sel.value = filterWard;
-      sel.classList.toggle('has-val', !!filterWard);
+    if (filterCount > 0) {
+      filterBadge.textContent = filterCount;
+      filterBadge.classList.add('show');
+      filterTriggerBtn.classList.add('active');
+    } else {
+      filterBadge.classList.remove('show');
+      filterTriggerBtn.classList.remove('active');
     }
-    closeWardDrawer();
-    render();
-    showToast(`🏛️ Ward ${wardNum} selected`);
-  }
 
-  function openWardDrawer() {
-    populateWardDrawer();
-    document.getElementById('wardDrawerOverlay').classList.add('open');
-  }
-
-  function closeWardDrawer() {
-    document.getElementById('wardDrawerOverlay').classList.remove('open');
-  }
-
-  /* ━━━ Active Tags Strip ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  function renderActiveTags() {
+    // Active Tags Strip
     const wrap = document.getElementById('activeTags');
     if (!wrap) return;
 
@@ -1810,65 +1775,72 @@
       tags += `<span class="filter-tag" onclick="clearFilterField('ward')">🏛️ Ward ${filterWard} ✕</span>`;
     }
     if (filterGender) {
-      const gLabels = { M: '👨 Male (पुरुष)', F: '👩 Female (महिला)' };
+      const gLabels = { M: '👨 Male', F: '👩 Female' };
       tags += `<span class="filter-tag" onclick="clearFilterField('gender')">${gLabels[filterGender] || filterGender} ✕</span>`;
     }
     if (filterStatus) {
-      const stLabels = { active: '✅ Active (सक्रिय)', deleted: '🚫 Deleted (विलोपित)', supp: '⚡ Supplementary' };
+      const stLabels = { active: '✅ Active', deleted: '🚫 Deleted', supp: '⚡ Supplementary' };
       tags += `<span class="filter-tag" onclick="clearFilterField('status')">${stLabels[filterStatus] || filterStatus} ✕</span>`;
     }
     if (filterLoc) {
       tags += `<span class="filter-tag" onclick="clearFilterField('loc')">📍 ${esc(filterLoc)} ✕</span>`;
     }
     if (filterAge) {
-      const ageLabels = { '18-25':'18–25 Yrs (युवा)', '26-40':'26–40 Yrs', '41-60':'41–60 Yrs', '60+':'60+ Yrs (वरिष्ठ)' };
+      const ageLabels = { '18-25':'18–25 Yrs', '26-40':'26–40 Yrs', '41-60':'41–60 Yrs', '60+':'60+ Yrs' };
       tags += `<span class="filter-tag" onclick="clearFilterField('age')">🎂 ${ageLabels[filterAge]||filterAge} ✕</span>`;
     }
     if (filterRel) {
-      const relLabels = { father:'Father (पिता)', husband:'Husband (पति)' };
+      const relLabels = { father:'Father', husband:'Husband' };
       tags += `<span class="filter-tag" onclick="clearFilterField('rel')">👥 ${relLabels[filterRel]||filterRel} ✕</span>`;
     }
     if (sortBy !== 'serial') {
-      const sortLabels = { name_hi:'Name (नाम A-Z)', age_asc:'Age (Low to High)', age_desc:'Age (High to Low)', house:'House No (मकान)' };
+      const sortLabels = { name_hi:'Name (A-Z)', age_asc:'Age (Low)', age_desc:'Age (High)', house:'House No' };
       tags += `<span class="filter-tag" onclick="clearFilterField('sort')">↕️ ${sortLabels[sortBy]||sortBy} ✕</span>`;
+    }
+    if (hasActiveFilters()) {
+      tags += `<span class="filter-tag" style="background:#fee2e2;border-color:#fca5a5;color:#dc2626" onclick="resetAllFilters()">✕ Clear All</span>`;
     }
 
     wrap.innerHTML = tags;
-    const resetBtn = document.getElementById('resetFiltersBtn');
-    if (resetBtn) resetBtn.classList.toggle('show', hasActiveFilters());
   }
 
   function clearFilterField(type) {
     if (type === 'ward') {
       filterWard = '';
       const el = document.getElementById('wardFilter');
-      if (el) { el.value = ''; el.classList.remove('has-val'); }
+      if (el) el.value = '';
+      document.getElementById('wardPillWrap').classList.remove('has-val');
     } else if (type === 'gender') {
       filterGender = '';
-      const el = document.getElementById('genderFilter');
-      if (el) { el.value = ''; el.classList.remove('has-val'); }
+      syncSegmentActive('drawerGenderGrid', '');
     } else if (type === 'status') {
       filterStatus = '';
-      const el = document.getElementById('statusFilter');
-      if (el) { el.value = ''; el.classList.remove('has-val'); }
+      syncSegmentActive('drawerStatusGrid', '');
     } else if (type === 'loc') {
       filterLoc = '';
-      const el = document.getElementById('locFilter');
-      if (el) { el.value = ''; el.classList.remove('has-val'); }
+      const el = document.getElementById('drawerLocSelect');
+      if (el) el.value = '';
     } else if (type === 'age') {
       filterAge = '';
-      const el = document.getElementById('ageFilter');
-      if (el) { el.value = ''; el.classList.remove('has-val'); }
+      syncSegmentActive('drawerAgeGrid', '');
     } else if (type === 'rel') {
       filterRel = '';
-      const el = document.getElementById('relFilter');
-      if (el) { el.value = ''; el.classList.remove('has-val'); }
+      syncSegmentActive('drawerRelGrid', '');
     } else if (type === 'sort') {
       sortBy = 'serial';
       const el = document.getElementById('sortFilter');
-      if (el) { el.value = 'serial'; el.classList.remove('has-val'); }
+      if (el) el.value = 'serial';
+      document.getElementById('sortPillWrap').classList.remove('has-val');
     }
     render();
+  }
+
+  function syncSegmentActive(containerId, activeVal) {
+    const wrap = document.getElementById(containerId);
+    if (!wrap) return;
+    wrap.querySelectorAll('.segment-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.val === activeVal);
+    });
   }
 
   function resetAllFilters() {
@@ -1877,32 +1849,30 @@
     document.getElementById('clrBtn').classList.remove('active');
 
     filterGender = '';
-    const gfEl = document.getElementById('genderFilter');
-    if (gfEl) { gfEl.value = ''; gfEl.classList.remove('has-val'); }
+    syncSegmentActive('drawerGenderGrid', '');
 
     filterStatus = '';
-    const sfEl = document.getElementById('statusFilter');
-    if (sfEl) { sfEl.value = ''; sfEl.classList.remove('has-val'); }
+    syncSegmentActive('drawerStatusGrid', '');
+
+    filterAge = '';
+    syncSegmentActive('drawerAgeGrid', '');
+
+    filterRel = '';
+    syncSegmentActive('drawerRelGrid', '');
+
+    filterLoc = '';
+    const locSelect = document.getElementById('drawerLocSelect');
+    if (locSelect) locSelect.value = '';
 
     filterWard = '';
     const wf = document.getElementById('wardFilter');
-    if (wf) { wf.value = ''; wf.classList.remove('has-val'); }
-
-    filterLoc = '';
-    const lf = document.getElementById('locFilter');
-    if (lf) { lf.value = ''; lf.classList.remove('has-val'); }
-
-    filterAge = '';
-    const af = document.getElementById('ageFilter');
-    if (af) { af.value = ''; af.classList.remove('has-val'); }
-
-    filterRel = '';
-    const rf = document.getElementById('relFilter');
-    if (rf) { rf.value = ''; rf.classList.remove('has-val'); }
+    if (wf) wf.value = '';
+    document.getElementById('wardPillWrap').classList.remove('has-val');
 
     sortBy = 'serial';
     const sortEl = document.getElementById('sortFilter');
-    if (sortEl) { sortEl.value = 'serial'; sortEl.classList.remove('has-val'); }
+    if (sortEl) sortEl.value = 'serial';
+    document.getElementById('sortPillWrap').classList.remove('has-val');
 
     render();
     showToast('All filters have been reset');
@@ -1914,22 +1884,22 @@
     const content = document.getElementById('content');
     const rcount = document.getElementById('rcount');
 
-    renderActiveTags();
+    updateFilterUI();
 
     if (hasActiveFilters()) {
       // ── Filtered Mode ──
       const matched = ALL.filter(v => matchVoter(v, q) && applyFilters(v));
       const sortedHits = sortVoters(matched);
 
-      rcount.innerHTML = `Showing <span class="highlight-count">${sortedHits.length.toLocaleString('en-IN')}</span> of <strong>${ALL.length.toLocaleString('en-IN')}</strong> Voters (मतदाता)`;
+      rcount.innerHTML = `Showing <span class="highlight-count">${sortedHits.length.toLocaleString('en-IN')}</span> of <strong>${ALL.length.toLocaleString('en-IN')}</strong> Voters`;
 
       if (sortedHits.length === 0) {
         content.innerHTML = `
           <div class="state-banner">
             <span class="state-icon-emoji">🔍</span>
-            <h2 class="state-title">No Voters Found (कोई परिणाम नहीं)</h2>
+            <h2 class="state-title">No Voters Found</h2>
             <p class="state-desc">No records match the selected query or filters.</p>
-            <button class="btn-load-more" style="width:auto;display:inline-block;padding:8px 22px" onclick="resetAllFilters()">Reset Filters (रीसेट करें)</button>
+            <button class="btn-load-more" style="width:auto;display:inline-block;padding:8px 22px" onclick="resetAllFilters()">Reset Filters (रीसेट)</button>
           </div>`;
         return;
       }
@@ -1950,10 +1920,8 @@
                   <span class="ward-badge-num">${ward}</span>
                 </div>
                 <div>
-                  <div class="ward-header-title">Ward No. ${ward} (वार्ड ${ward})</div>
-                  <div class="ward-header-meta">
-                    <span>${list.length} Voters found</span>
-                  </div>
+                  <div class="ward-header-title">Ward ${ward}</div>
+                  <div class="ward-header-meta">${list.length} Voters found</div>
                 </div>
               </div>
             </div>
@@ -1969,7 +1937,7 @@
     } else {
       // ── Default Ward-First Accordion Mode ──
       const total = ALL.length;
-      rcount.innerHTML = `Total <strong>${total.toLocaleString('en-IN')}</strong> Voters (मतदाता) — <strong>${WARDS.length}</strong> Wards (वार्ड)`;
+      rcount.innerHTML = `Total <strong>${total.toLocaleString('en-IN')}</strong> Voters — <strong>${WARDS.length}</strong> Wards`;
 
       let html = '';
       WARDS.forEach((w) => {
@@ -1989,18 +1957,12 @@
                   <span class="ward-badge-num">${w.ward}</span>
                 </div>
                 <div>
-                  <div class="ward-header-title">Ward No. ${w.ward} (वार्ड ${w.ward})</div>
-                  <div class="ward-header-meta">
-                    <span>${voters.length.toLocaleString('en-IN')} Voters</span>
-                    <span>•</span>
-                    <span style="color:#64748b">Masalpur</span>
-                  </div>
+                  <div class="ward-header-title">Ward ${w.ward}</div>
+                  <div class="ward-header-meta">${voters.length.toLocaleString('en-IN')} Voters · Masalpur</div>
                 </div>
               </div>
-              <div class="ward-header-right">
-                <div class="ward-chevron-circle">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
+              <div class="ward-chevron-circle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
               </div>
             </div>
 
@@ -2013,7 +1975,7 @@
           html += `
             <div class="load-more-container" id="more-wrap-${w.ward}">
               <button class="btn-load-more" onclick="loadMoreInWard(${w.ward})">
-                Load More (${rest} remaining) / और देखें
+                Load More (${rest} remaining)
               </button>
             </div>
           `;
@@ -2034,7 +1996,7 @@
   /* ━━━ Voter Card with Prominent Serial Number Box on List Screen ━━━ */
   function voterCardHTML(v, q) {
     const isMale = v.gender === 'M';
-    const gLabel = isMale ? 'Male (पुरुष)' : 'Female (महिला)';
+    const gLabel = isMale ? 'पुरुष' : 'महिला';
     const gClass = isMale ? 'male' : 'female';
     const relLabel = v.relation_type === 'husband' ? 'Husband (पति)' : 'Father (पिता)';
     const delClass = v.status === 'deleted' ? 'is-deleted' : '';
@@ -2043,7 +2005,7 @@
     return `
       <div class="voter-card gender-${v.gender} status-${v.status}" data-id="${v._id}">
         <div class="vc-main-layout">
-          <!-- ── Prominent Serial Number Box ── -->
+          <!-- ── Prominent Serial Number Box on Left ── -->
           <div class="vc-serial-box" title="मतदाता क्रमांक (Serial Number)">
             <span class="vc-serial-lbl">क्रमांक</span>
             <span class="vc-serial-num">#${v.serial}</span>
@@ -2070,7 +2032,7 @@
               <span class="rel-val">${hl(v.relation_name_hi, q)}</span>
             </div>
 
-            <!-- Meta Tags -->
+            <!-- Meta Tags (Wrapping smoothly, zero overflow) -->
             <div class="vc-meta-grid">
               <span class="meta-tag highlight-epic" title="Voter ID (EPIC)">
                 🆔 ${hl(v.epic, q)}
@@ -2092,16 +2054,16 @@
           </div>
         </div>
 
-        <!-- Quick Action Bar -->
+        <!-- Quick Action Bar (3-column mobile safe grid) -->
         <div class="vc-quick-actions" onclick="event.stopPropagation()">
           <button class="vc-act-btn whatsapp" onclick="shareWhatsAppDirect(event, ${v._id})" title="Share Slip on WhatsApp">
-            🟢 WhatsApp Slip
+            🟢 WhatsApp
           </button>
           <button class="vc-act-btn copy" onclick="copyEpicDirect(event, '${esc(v.epic)}')" title="Copy EPIC Voter ID">
-            📋 Copy EPIC
+            📋 Copy
           </button>
           <button class="vc-act-btn family" onclick="filterBySameHouse(event, ${v.ward}, '${esc(v.house_no)}')" title="View family members in this house">
-            🏠 Family (परिवार)
+            🏠 Family
           </button>
         </div>
       </div>
@@ -2148,7 +2110,7 @@
     if (moreWrap) {
       moreWrap.insertAdjacentHTML('beforebegin', frag);
       if (remaining > 0) {
-        moreWrap.querySelector('.btn-load-more').textContent = `Load More (${remaining} remaining) / और देखें`;
+        moreWrap.querySelector('.btn-load-more').textContent = `Load More (${remaining} remaining)`;
       } else {
         moreWrap.remove();
       }
@@ -2164,7 +2126,7 @@
     const gColor = isMale ? 'male' : 'female';
     const relLabel = v.relation_type === 'husband' ? 'Husband (पति)' : 'Father (पिता)';
     const relIcon = v.relation_type === 'husband' ? '💑' : '👨‍👦';
-    const stLabel = { active:'✅ Active (सक्रिय)', deleted:'🚫 Deleted (विलोपित)', modified:'⚠️ Modified (संशोधित)' }[v.status] || v.status;
+    const stLabel = { active:'✅ Active', deleted:'🚫 Deleted', modified:'⚠️ Modified' }[v.status] || v.status;
 
     // Find family members (same ward & same house_no)
     const familyMembers = ALL.filter(m => m.ward === v.ward && m.house_no && m.house_no === v.house_no && m._id !== v._id);
@@ -2175,7 +2137,7 @@
         <div class="family-section">
           <div class="family-header">
             <div class="family-title">
-              🏠 Same House Members (परिवार के सदस्य) — House No: ${esc(v.house_no)}
+              🏠 Same House Members — House No: ${esc(v.house_no)}
             </div>
             <span class="family-count-badge">${familyMembers.length} Members</span>
           </div>
@@ -2184,7 +2146,7 @@
               <div class="family-member-item" onclick="openDetailModalById(${m._id})">
                 <div>
                   <div class="family-item-name">${esc(m.name_hi)}</div>
-                  <div class="family-item-meta">${m.gender === 'M' ? 'Male (पुरुष)' : 'Female (महिला)'} • ${m.age} Yrs • ${m.relation_type === 'husband' ? 'Husband (पति)' : 'Father (पिता)'}: ${esc(m.relation_name_hi)}</div>
+                  <div class="family-item-meta">${m.gender === 'M' ? 'Male' : 'Female'} • ${m.age} Yrs • ${m.relation_type === 'husband' ? 'Husband' : 'Father'}: ${esc(m.relation_name_hi)}</div>
                 </div>
                 <div style="font-family:monospace;font-size:11px;font-weight:700;color:#0284c7">#${m.serial}</div>
               </div>
@@ -2214,15 +2176,15 @@
             <div class="slip-name-en">${esc(v.name_en)}</div>
           </div>
           <div style="text-align:right">
-            <span class="gender-pill ${gColor}">${isMale ? '👨' : '👩'} ${gLabel}</span>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Serial: <strong>#${v.serial}</strong></div>
+            <span class="gender-pill ${gColor}">${isMale ? '👨' : '👩'} ${isMale ? 'Male' : 'Female'}</span>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Serial: <strong>#${v.serial}</strong></div>
           </div>
         </div>
 
         <!-- EPIC Code Banner with Copy Action -->
         <div class="slip-epic-banner" id="sheetEpicBanner" onclick="copyEpicDirect(event, '${esc(v.epic)}')">
           <div>
-            <div style="font-size:10px;text-transform:uppercase;color:#0284c7;font-weight:700">Voter ID Card (EPIC) — Tap to Copy</div>
+            <div style="font-size:9px;text-transform:uppercase;color:#0284c7;font-weight:700">Voter ID Card (EPIC) — Tap to Copy</div>
             <div class="epic-code-display">${esc(v.epic)}</div>
           </div>
           <div class="epic-copy-indicator">
@@ -2238,7 +2200,7 @@
           </div>
           <div class="slip-cell">
             <div class="slip-cell-lbl">Age (आयु)</div>
-            <div class="slip-cell-val">${v.age} Yrs (वर्ष)</div>
+            <div class="slip-cell-val">${v.age} Yrs</div>
           </div>
           <div class="slip-cell">
             <div class="slip-cell-lbl">House No. (मकान नं.)</div>
@@ -2262,7 +2224,7 @@
         <div class="slip-wide-cell">
           <div class="slip-wide-icon">${relIcon}</div>
           <div>
-            <div class="slip-wide-title">${relLabel} Name (${v.relation_type === 'husband' ? 'पति' : 'पिता'} का नाम)</div>
+            <div class="slip-wide-title">${relLabel} Name</div>
             <div class="slip-wide-val">${esc(v.relation_name_hi)}</div>
           </div>
         </div>
@@ -2271,7 +2233,7 @@
         <div class="slip-wide-cell">
           <div class="slip-wide-icon">📍</div>
           <div>
-            <div class="slip-wide-title">Locality / Area (मोहल्ला / क्षेत्र)</div>
+            <div class="slip-wide-title">Locality / Area</div>
             <div class="slip-wide-val">${esc(v.locality_hi)}</div>
           </div>
         </div>
@@ -2280,10 +2242,10 @@
       <!-- Action Buttons -->
       <div class="sheet-action-row">
         <button class="btn-sheet-primary whatsapp" onclick="shareWhatsAppVoter(${v._id})">
-          <span>🟢 Share on WhatsApp</span>
+          <span>🟢 WhatsApp</span>
         </button>
         <button class="btn-sheet-primary print" onclick="window.print()">
-          <span>🖨️ Print Slip (प्रिंट)</span>
+          <span>🖨️ Print Slip</span>
         </button>
       </div>
 
@@ -2303,6 +2265,52 @@
   function closeDetailModal() {
     document.getElementById('overlay').classList.remove('open');
     document.body.style.overflow = '';
+  }
+
+  /* ━━━ Filter Bottom Sheet Drawer Actions ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function openFilterSheet() {
+    document.getElementById('filterSheetOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFilterSheet() {
+    document.getElementById('filterSheetOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Setup Segment Button Clicks inside Filter Drawer
+  function setupFilterDrawerSegments() {
+    const setupGroup = (containerId, onSelect) => {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.addEventListener('click', e => {
+        const btn = e.target.closest('.segment-btn');
+        if (!btn) return;
+        container.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        onSelect(btn.dataset.val);
+      });
+    };
+
+    setupGroup('drawerGenderGrid', val => { filterGender = val; });
+    setupGroup('drawerStatusGrid', val => { filterStatus = val; });
+    setupGroup('drawerAgeGrid', val => { filterAge = val; });
+    setupGroup('drawerRelGrid', val => { filterRel = val; });
+
+    document.getElementById('drawerLocSelect').addEventListener('change', e => {
+      filterLoc = e.target.value;
+    });
+
+    document.getElementById('btnDrawerApply').addEventListener('click', () => {
+      closeFilterSheet();
+      render();
+      showToast('Filters applied ✓');
+    });
+
+    document.getElementById('btnDrawerReset').addEventListener('click', () => {
+      resetAllFilters();
+      closeFilterSheet();
+    });
   }
 
   /* ━━━ Actions: WhatsApp & Copy ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -2354,13 +2362,11 @@ Masalpur Municipality, Karauli (Raj.)`;
       showToast('House number not available');
       return;
     }
-    // Set ward and query
     filterWard = String(ward);
     const wardEl = document.getElementById('wardFilter');
-    if (wardEl) {
-      wardEl.value = filterWard;
-      wardEl.classList.add('has-val');
-    }
+    if (wardEl) wardEl.value = filterWard;
+    document.getElementById('wardPillWrap').classList.add('has-val');
+
     document.getElementById('q').value = houseNo;
     query = houseNo;
     document.getElementById('clrBtn').classList.add('active');
@@ -2401,66 +2407,36 @@ Masalpur Municipality, Karauli (Raj.)`;
 
   document.getElementById('wardFilter').addEventListener('change', e => {
     filterWard = e.target.value;
-    e.target.classList.toggle('has-val', !!filterWard);
-    render();
-  });
-
-  document.getElementById('genderFilter').addEventListener('change', e => {
-    filterGender = e.target.value;
-    e.target.classList.toggle('has-val', !!filterGender);
-    render();
-  });
-
-  document.getElementById('statusFilter').addEventListener('change', e => {
-    filterStatus = e.target.value;
-    e.target.classList.toggle('has-val', !!filterStatus);
-    render();
-  });
-
-  document.getElementById('locFilter').addEventListener('change', e => {
-    filterLoc = e.target.value;
-    e.target.classList.toggle('has-val', !!filterLoc);
-    render();
-  });
-
-  document.getElementById('ageFilter').addEventListener('change', e => {
-    filterAge = e.target.value;
-    e.target.classList.toggle('has-val', !!filterAge);
-    render();
-  });
-
-  document.getElementById('relFilter').addEventListener('change', e => {
-    filterRel = e.target.value;
-    e.target.classList.toggle('has-val', !!filterRel);
+    document.getElementById('wardPillWrap').classList.toggle('has-val', !!filterWard);
     render();
   });
 
   document.getElementById('sortFilter').addEventListener('change', e => {
     sortBy = e.target.value;
-    e.target.classList.toggle('has-val', sortBy !== 'serial');
+    document.getElementById('sortPillWrap').classList.toggle('has-val', sortBy !== 'serial');
     render();
   });
 
-  document.getElementById('resetFiltersBtn').addEventListener('click', resetAllFilters);
+  // Filter Bottom Sheet Triggers
+  document.getElementById('btnOpenFilterSheet').addEventListener('click', openFilterSheet);
+  document.getElementById('btnCloseFilterSheet').addEventListener('click', closeFilterSheet);
+  document.getElementById('filterSheetOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('filterSheetOverlay')) closeFilterSheet();
+  });
 
   // Modal Closures
   document.getElementById('overlay').addEventListener('click', e => {
     if (e.target === document.getElementById('overlay')) closeDetailModal();
   });
-  document.getElementById('wardDrawerOverlay').addEventListener('click', e => {
-    if (e.target === document.getElementById('wardDrawerOverlay')) closeWardDrawer();
-  });
-  document.getElementById('btnWardJump').addEventListener('click', openWardDrawer);
-  document.getElementById('btnCloseWardDrawer').addEventListener('click', closeWardDrawer);
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       closeDetailModal();
-      closeWardDrawer();
+      closeFilterSheet();
     }
   });
 
-  // Swipe-down to close on bottom sheet
+  // Swipe-down to close on bottom sheets
   let touchStartY = 0;
   document.getElementById('sheet').addEventListener('touchstart', e => {
     touchStartY = e.touches[0].clientY;
@@ -2474,7 +2450,7 @@ Masalpur Municipality, Karauli (Raj.)`;
   // Scroll to Top FAB
   const btnScrollTop = document.getElementById('btnScrollTop');
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 320) {
+    if (window.scrollY > 300) {
       btnScrollTop.classList.add('visible');
     } else {
       btnScrollTop.classList.remove('visible');
@@ -2486,6 +2462,7 @@ Masalpur Municipality, Karauli (Raj.)`;
   });
 
   /* ━━━ Start App ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  setupFilterDrawerSegments();
   boot();
   </script>
 </body>
