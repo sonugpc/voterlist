@@ -535,20 +535,34 @@ async function boot() {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
 
+    let uid = 0;
     // Support [{ward,list}] or flat array or {voters:[]}
     if (Array.isArray(data) && data[0]?.list) {
       WARDS = data;
-      ALL   = data.flatMap(w => w.list.map(v => ({ ...v, ward: w.ward })));
+      ALL = [];
+      data.forEach(w => {
+        w.list.forEach(v => {
+          v.ward = w.ward;
+          v._id = ++uid;
+          ALL.push(v);
+        });
+      });
     } else if (Array.isArray(data)) {
       // flat array — group by ward field
       const map = {};
-      data.forEach(v => { (map[v.ward||0] ??= []).push(v); });
+      data.forEach(v => {
+        v._id = ++uid;
+        (map[v.ward||0] ??= []).push(v);
+      });
       WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
       ALL = data;
     } else {
       const arr = data.voters || data.data || [];
       const map = {};
-      arr.forEach(v => { (map[v.ward||0] ??= []).push(v); });
+      arr.forEach(v => {
+        v._id = ++uid;
+        (map[v.ward||0] ??= []).push(v);
+      });
       WARDS = Object.keys(map).sort((a,b)=>+a-+b).map(w => ({ ward:+w, list: map[w] }));
       ALL = arr;
     }
@@ -679,7 +693,7 @@ function voterCardHTML(v, q) {
   const statusCls = v.status !== 'active' ? `status-${v.status}` : '';
 
   return `
-    <div class="vcard ${statusCls}" data-epic="${esc(v.epic)}">
+    <div class="vcard ${statusCls}" data-id="${v._id}">
       <div class="vc-top">
         <div class="vc-names">
           <div class="vc-name-hi ${delClass}">${hl(v.name_hi, q)}</div>
@@ -718,8 +732,8 @@ function voterCardHTML(v, q) {
 function bindCards() {
   document.querySelectorAll('.vcard').forEach(card => {
     card.addEventListener('click', () => {
-      const epic = card.dataset.epic;
-      const v = ALL.find(x => x.epic === epic);
+      const id = +card.dataset.id;
+      const v = ALL.find(x => x._id === id);
       if (v) openDetail(v, norm(query));
     });
   });
@@ -760,7 +774,8 @@ function loadMore(ward) {
   body.querySelectorAll('.vcard:not([data-bound])').forEach(card => {
     card.dataset.bound = '1';
     card.addEventListener('click', () => {
-      const v = ALL.find(x => x.epic === card.dataset.epic);
+      const id = +card.dataset.id;
+      const v = ALL.find(x => x._id === id);
       if (v) openDetail(v, '');
     });
   });
