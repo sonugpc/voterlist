@@ -76,6 +76,10 @@
       background: var(--bg-page);
     }
 
+    html.auth-locked body > :not(#authScreen) {
+      display: none !important;
+    }
+
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-main);
@@ -1324,6 +1328,72 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    #authScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at top right, #ffedd5 0, transparent 42%), #f8fafc;
+    }
+    html.auth-locked #authScreen { display: flex; }
+    .auth-panel {
+      width: min(100%, 390px);
+      padding: 26px;
+      background: #ffffff;
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 48px rgba(15,23,42,0.12);
+    }
+    .auth-mark {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      background: var(--primary-light);
+      font-size: 24px;
+    }
+    .auth-title { font-size: 21px; font-weight: 800; }
+    .auth-copy { margin-top: 6px; color: var(--text-muted); font-size: 13px; }
+    .auth-form { display: grid; gap: 12px; margin-top: 22px; }
+    .auth-input {
+      width: 100%;
+      height: 46px;
+      padding: 0 13px;
+      border: 1.5px solid var(--surface-border);
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+    }
+    .auth-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .auth-submit, .auth-secondary {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .auth-submit { background: var(--primary); color: #ffffff; }
+    .auth-submit:disabled { opacity: 0.6; cursor: wait; }
+    .auth-secondary { color: var(--text-muted); border: 1px solid var(--surface-border); }
+    .auth-message { min-height: 18px; color: var(--text-muted); font-size: 12px; }
+    .auth-message.error { color: var(--danger); }
+    .logout-button {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid var(--surface-border);
+      border-radius: 50%;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
     /* ━━━ Print Media Styles ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     @media print {
       body { background: #fff; color: #000; }
@@ -1348,8 +1418,26 @@
       }
     }
   </style>
+  <script>document.documentElement.classList.add('auth-locked');</script>
 </head>
 <body>
+
+  <section id="authScreen" aria-labelledby="authTitle">
+    <div class="auth-panel">
+      <div class="auth-mark" aria-hidden="true">🗳️</div>
+      <h1 class="auth-title" id="authTitle">Voter List Access</h1>
+      <p class="auth-copy">Enter your name to request access from the administrator.</p>
+      <form class="auth-form" id="authForm">
+        <input class="auth-input" id="authName" type="text" maxlength="60" autocomplete="name" placeholder="Your name" required />
+        <button class="auth-submit" id="authSubmit" type="submit">Request access</button>
+        <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+      </form>
+      <div class="auth-form" id="authPending" hidden>
+        <p class="auth-copy" id="authPendingCopy">Waiting for administrator approval…</p>
+        <button class="auth-secondary" id="authChangeName" type="button">Use a different name</button>
+      </div>
+    </div>
+  </section>
 
   <!-- ── 1. CLEAN MOBILE HEADER (WHITE, NO OVERFLOW) ────────────────────── -->
   <header class="app-header">
@@ -1367,6 +1455,7 @@
       <div class="header-voter-badge" id="headerVoterBadge">
         Total: <strong id="headerTotalNum">...</strong>
       </div>
+      <button class="logout-button" id="logoutBtn" type="button" title="Log out" aria-label="Log out">↪</button>
     </div>
 
     <!-- Compact Stats Strip (100% Horizontal Safe) -->
@@ -1538,6 +1627,9 @@
   <script>
   /* ━━━ Config ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   const DATA_FILE = './voters_new.json';
+  const APPROVAL_API = 'https://bigtricks.in/apis/approve.php';
+  const AUTH_STORAGE_KEY = 'masalpur-voter-auth-v1';
+  const DEVICE_STORAGE_KEY = 'masalpur-voter-device-v1';
   const PAGE_SIZE = 40;
 
   /* ━━━ State ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -1551,6 +1643,11 @@
   let filterAge = '';        // Selected Age Group
   let filterRel = '';        // Selected Relation ('father', 'husband')
   let sortBy = 'serial';     // 'serial', 'name_hi', 'age_asc', 'age_desc', 'house'
+  let authSession = null;
+  let authPollTimer = null;
+  let authPollRunning = false;
+  let activeStatusTimer = null;
+  let lastAuditedQuery = '';
 
   /* ━━━ String Helpers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   const esc = s => (s ?? '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1614,6 +1711,165 @@
     return Boolean(query || filterWard || getActiveFilterCount() > 0 || sortBy !== 'serial');
   }
 
+  function getDeviceId() {
+    let deviceId = localStorage.getItem(DEVICE_STORAGE_KEY);
+    if (!deviceId) {
+      deviceId = crypto.randomUUID();
+      localStorage.setItem(DEVICE_STORAGE_KEY, deviceId);
+    }
+    return deviceId;
+  }
+
+  async function approvalRequest(action, values = {}) {
+    const response = await fetch(APPROVAL_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...values }),
+      cache: 'no-store'
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
+    return result;
+  }
+
+  function showAuthMessage(message, isError = false) {
+    const element = document.getElementById('authMessage');
+    element.textContent = message;
+    element.classList.toggle('error', isError);
+  }
+
+  function showPendingState(username) {
+    document.getElementById('authForm').hidden = true;
+    document.getElementById('authPending').hidden = false;
+    document.getElementById('authPendingCopy').textContent = `Request for ${username} is waiting for administrator approval.`;
+  }
+
+  function showRequestForm(username = '') {
+    document.getElementById('authPending').hidden = true;
+    document.getElementById('authForm').hidden = false;
+    document.getElementById('authName').value = username;
+    showAuthMessage('');
+  }
+
+  function clearAuthSession() {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    authSession = null;
+    clearInterval(authPollTimer);
+    clearInterval(activeStatusTimer);
+  }
+
+  function startApprovedApp(session) {
+    clearInterval(authPollTimer);
+    authSession = session;
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
+    document.documentElement.classList.remove('auth-locked');
+    document.getElementById('authScreen').setAttribute('aria-hidden', 'true');
+    document.getElementById('logoutBtn').title = `Log out ${session.username}`;
+    setupFilterDrawerSegments();
+    boot();
+    clearInterval(activeStatusTimer);
+    activeStatusTimer = setInterval(checkApprovalStatus, 30000);
+  }
+
+  async function checkApprovalStatus() {
+    if (!authSession || authPollRunning) return;
+    authPollRunning = true;
+    try {
+      const result = await approvalRequest('status', {
+        requestId: authSession.requestId,
+        deviceId: authSession.deviceId,
+        claimSecret: authSession.claimSecret,
+        token: authSession.token || ''
+      });
+      if (result.status === 'approved' && result.token) {
+        const session = { ...authSession, token: result.token };
+        if (document.documentElement.classList.contains('auth-locked')) {
+          startApprovedApp(session);
+        } else {
+          authSession = session;
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
+        }
+      } else if (result.status === 'pending') {
+        showPendingState(authSession.username);
+      } else {
+        const wasApproved = Boolean(authSession.token) && !document.documentElement.classList.contains('auth-locked');
+        clearAuthSession();
+        if (wasApproved) {
+          document.documentElement.classList.add('auth-locked');
+          window.location.reload();
+          return;
+        }
+        showRequestForm();
+        showAuthMessage('Access was not approved or has been revoked. Request access again.', true);
+      }
+    } catch (error) {
+      if (document.documentElement.classList.contains('auth-locked')) {
+        showAuthMessage('Could not reach the approval server. Check your connection and try again.', true);
+      }
+    } finally {
+      authPollRunning = false;
+    }
+  }
+
+  function startPendingChecks() {
+    clearInterval(authPollTimer);
+    authPollTimer = setInterval(checkApprovalStatus, 5000);
+  }
+
+  async function initApprovalGate() {
+    try {
+      const saved = localStorage.getItem(AUTH_STORAGE_KEY);
+      if (saved) {
+        authSession = JSON.parse(saved);
+        await checkApprovalStatus();
+        if (authSession?.token && !document.documentElement.classList.contains('auth-locked')) return;
+        if (authSession?.requestId && document.documentElement.classList.contains('auth-locked')) {
+          showPendingState(authSession.username);
+          startPendingChecks();
+          return;
+        }
+      }
+      showRequestForm();
+    } catch (error) {
+      clearAuthSession();
+      showRequestForm();
+      showAuthMessage('Could not reach the approval server. Check your connection and try again.', true);
+    }
+  }
+
+  document.getElementById('authForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    const username = document.getElementById('authName').value.trim();
+    if (!username) return;
+    const submit = document.getElementById('authSubmit');
+    submit.disabled = true;
+    showAuthMessage('Sending access request…');
+    try {
+      const deviceId = getDeviceId();
+      const claimSecret = crypto.randomUUID();
+      const result = await approvalRequest('request', { username, deviceId, claimSecret });
+      authSession = { requestId: result.requestId, deviceId, claimSecret, username, token: '' };
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authSession));
+      showPendingState(username);
+      startPendingChecks();
+      await checkApprovalStatus();
+    } catch (error) {
+      showAuthMessage(error.message || 'Could not send request. Try again.', true);
+    } finally {
+      submit.disabled = false;
+    }
+  });
+
+  document.getElementById('authChangeName').addEventListener('click', () => {
+    clearAuthSession();
+    showRequestForm();
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    clearAuthSession();
+    window.location.reload();
+  });
+
   /* ━━━ Sorting Function ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function sortVoters(list) {
     if (sortBy === 'serial') {
@@ -1637,9 +1893,9 @@
   /* ━━━ Boot Application ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   async function boot() {
     try {
-      const res = await fetch(DATA_FILE);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      const response = await fetch(DATA_FILE);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
 
       let uid = 0;
       if (Array.isArray(data) && data[0]?.list) {
@@ -1680,7 +1936,7 @@
         <div class="state-banner">
           <span class="state-icon-emoji">⚠️</span>
           <h2 class="state-title">Failed to load voter data</h2>
-          <p class="state-desc">Please ensure <code>${DATA_FILE}</code> is placed in the project folder.<br/>${err.message}</p>
+          <p class="state-desc">Please ensure <code>${DATA_FILE}</code> is available in the project folder.<br/>${err.message}</p>
         </div>`;
     }
   }
@@ -2394,12 +2650,26 @@ Masalpur Municipality, Karauli (Raj.)`;
     query = e.target.value;
     document.getElementById('clrBtn').classList.toggle('active', query.length > 0);
     clearTimeout(searchDebounce);
-    searchDebounce = setTimeout(render, 180);
+    searchDebounce = setTimeout(() => {
+      render();
+      const normalizedQuery = query.trim();
+      if (normalizedQuery && normalizedQuery !== lastAuditedQuery && authSession?.token) {
+        lastAuditedQuery = normalizedQuery;
+        approvalRequest('audit', {
+          requestId: authSession.requestId,
+          deviceId: authSession.deviceId,
+          token: authSession.token,
+          event: 'search'
+        }).catch(() => {});
+      }
+      if (!normalizedQuery) lastAuditedQuery = '';
+    }, 180);
   });
 
   document.getElementById('clrBtn').addEventListener('click', () => {
     document.getElementById('q').value = '';
     query = '';
+    lastAuditedQuery = '';
     document.getElementById('clrBtn').classList.remove('active');
     render();
     document.getElementById('q').focus();
@@ -2462,8 +2732,7 @@ Masalpur Municipality, Karauli (Raj.)`;
   });
 
   /* ━━━ Start App ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  setupFilterDrawerSegments();
-  boot();
+  initApprovalGate();
   </script>
 </body>
 </html>
